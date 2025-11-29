@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Solana Miner Premium</title>
+    <title>Solana Miner Ultra</title>
 
     <!-- FONTS -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
@@ -18,7 +18,7 @@
             --sol-green: #14F195;
             --sol-purple: #9945FF;
             --bg-dark: #000000;
-            --glass: rgba(20, 20, 20, 0.85);
+            --glass: rgba(20, 20, 20, 0.9);
             --border: rgba(255, 255, 255, 0.1);
             --font-main: 'Outfit', sans-serif;
         }
@@ -28,8 +28,8 @@
         body {
             background-color: var(--bg-dark);
             background-image: 
-                radial-gradient(circle at 50% 0%, rgba(153, 69, 255, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 50% 100%, rgba(20, 241, 149, 0.15) 0%, transparent 50%);
+                radial-gradient(circle at 10% 10%, rgba(153, 69, 255, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(20, 241, 149, 0.15) 0%, transparent 40%);
             color: white;
             font-family: var(--font-main);
             margin: 0; height: 100vh;
@@ -51,13 +51,17 @@
             padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 10;
         }
         .user-badge {
-            display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 14px;
+            display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px;
         }
         .avatar {
-            width: 34px; height: 34px;
+            width: 32px; height: 32px;
             background: linear-gradient(135deg, var(--sol-green), var(--sol-purple));
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 10px rgba(153, 69, 255, 0.5);
+        }
+        .tg-btn {
+            background: #0088cc; border: none; padding: 6px 12px; border-radius: 20px;
+            font-size: 11px; font-weight: bold; color: white; display: flex; align-items: center; gap: 5px;
+            text-decoration: none; cursor: pointer; box-shadow: 0 0 10px rgba(0, 136, 204, 0.4);
         }
 
         /* --- SCREENS --- */
@@ -68,16 +72,16 @@
         /* --- MINE SCREEN --- */
         .balance-card { text-align: center; margin-bottom: 20px; }
         .balance-val { 
-            font-size: 58px; font-weight: 900; line-height: 1;
+            font-size: 56px; font-weight: 900; line-height: 1;
             background: linear-gradient(to bottom, #fff, #bbb);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             font-family: var(--font-main);
         }
-        .balance-lbl { font-size: 13px; letter-spacing: 2px; color: #888; text-transform: uppercase; margin-top: 5px; }
+        .balance-lbl { font-size: 12px; letter-spacing: 2px; color: #888; text-transform: uppercase; margin-top: 5px; }
 
         .miner-area { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; }
         .solana-coin {
-            width: 270px; height: 270px; border-radius: 50%;
+            width: 260px; height: 260px; border-radius: 50%;
             background: radial-gradient(circle, #1a1a1a, #000);
             border: 4px solid rgba(153, 69, 255, 0.3);
             box-shadow: 0 0 80px rgba(153, 69, 255, 0.2);
@@ -87,63 +91,49 @@
         .solana-coin img { width: 75%; pointer-events: none; }
         .solana-coin:active { transform: scale(0.95); border-color: var(--sol-green); }
 
-        /* Energy Bar */
-        .energy-box { margin-top: 20px; }
-        .energy-info { display: flex; justify-content: space-between; font-size: 12px; color: #aaa; margin-bottom: 5px; }
-        .energy-track { background: #222; height: 12px; border-radius: 6px; overflow: hidden; border: 1px solid #333; }
-        .energy-fill {
-            height: 100%; width: 100%;
-            background: linear-gradient(90deg, var(--sol-purple), var(--sol-green));
-            transition: width 0.3s ease;
+        /* Energy & Auto Bot Info */
+        .stats-row {
+            display: flex; justify-content: space-between; align-items: center;
+            background: #111; padding: 10px 15px; border-radius: 15px; border: 1px solid #222; margin-top: 20px;
         }
+        .energy-track { flex: 1; height: 8px; background: #333; border-radius: 4px; margin: 0 10px; overflow: hidden; }
+        .energy-fill { height: 100%; width: 100%; background: linear-gradient(90deg, var(--sol-purple), var(--sol-green)); transition: width 0.3s; }
 
-        /* --- WALLET SCREEN (YOUR PREMIUM THEME) --- */
+        /* --- WALLET SCREEN --- */
         .wallet-card {
             background: linear-gradient(135deg, var(--sol-purple), #5e28a5);
             padding: 25px; border-radius: 25px; margin-bottom: 25px;
             box-shadow: 0 10px 30px rgba(153, 69, 255, 0.3);
         }
         .live-price { font-size: 12px; opacity: 0.8; margin-top: 10px; display: flex; align-items: center; gap: 5px; }
-        .price-up { color: #8aff8a; }
-
-        .swap-container { margin-top: 20px; }
+        
         .swap-box {
             background: #111; padding: 15px; border-radius: 15px;
             display: flex; justify-content: space-between; align-items: center;
             border: 1px solid #333; margin-bottom: 10px;
         }
-        .swap-icon { width: 30px; height: 30px; border-radius: 50%; margin-right: 10px; }
-        .swap-input { background: transparent; border: none; color: white; font-size: 20px; font-weight: bold; text-align: right; width: 150px; outline: none; font-family: var(--font-main); }
+        .swap-input { background: transparent; border: none; color: white; font-size: 18px; text-align: right; width: 120px; outline: none; font-family: var(--font-main); font-weight: bold; }
         
         .btn-action {
-            width: 100%; padding: 18px; border-radius: 15px; border: none;
+            width: 100%; padding: 16px; border-radius: 15px; border: none;
             background: linear-gradient(45deg, var(--sol-green), #0abf70);
-            color: #000; font-weight: 800; font-size: 16px; margin-top: 15px;
-            cursor: pointer;
+            color: #000; font-weight: 800; font-size: 16px; margin-top: 15px; cursor: pointer;
         }
 
-        /* --- TASKS --- */
-        .task-item { display: flex; align-items: center; padding: 15px; margin-bottom: 10px; gap: 12px; }
-        .task-img { width: 42px; height: 42px; border-radius: 10px; }
-        .task-btn {
-            background: white; color: black; border: none; padding: 8px 16px;
-            border-radius: 20px; font-weight: 700; font-size: 12px; cursor: pointer;
-        }
-        .task-btn.done { background: #333; color: #555; pointer-events: none; }
-
-        /* --- BOOST (Magic Icons) --- */
+        /* --- MAGIC CLAIMS (Rank Images) --- */
         .ad-card {
             padding: 15px; text-align: center; display: flex; flex-direction: column; align-items: center;
+            border: 1px solid rgba(153, 69, 255, 0.2);
         }
-        .magic-icon { width: 50px; height: 50px; margin-bottom: 10px; filter: drop-shadow(0 0 10px var(--sol-green)); }
+        .rank-img { width: 50px; height: 50px; margin-bottom: 8px; filter: drop-shadow(0 0 8px var(--sol-green)); }
         
-        /* --- LEADERBOARD --- */
-        .lb-row {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05);
+        /* --- TASKS --- */
+        .task-item { display: flex; align-items: center; padding: 12px; margin-bottom: 10px; gap: 12px; }
+        .task-btn {
+            background: white; color: black; border: none; padding: 8px 14px;
+            border-radius: 20px; font-weight: 700; font-size: 11px; cursor: pointer;
         }
-        .lb-rank { color: #888; font-weight: bold; width: 30px; font-family: var(--font-main); }
-        .lb-val { color: var(--sol-green); font-weight: bold; display: flex; align-items: center; gap: 5px; font-family: var(--font-main); }
+        .task-btn.done { background: #333; color: #555; pointer-events: none; }
 
         /* --- MODALS --- */
         .modal-overlay {
@@ -151,14 +141,25 @@
             z-index: 999; justify-content: center; align-items: center;
         }
         .modal-box {
-            background: #181818; width: 90%; max-width: 360px; padding: 30px;
-            border-radius: 30px; text-align: center; border: 1px solid var(--sol-purple);
+            background: #151515; width: 85%; max-width: 320px; padding: 25px;
+            border-radius: 25px; text-align: center; border: 1px solid var(--sol-purple);
+            position: relative;
+        }
+        
+        /* GIFT BOX ANIMATION */
+        .gift-img {
+            width: 100px; margin-bottom: 15px;
+            animation: shake 2s infinite; cursor: pointer;
+        }
+        @keyframes shake {
+            0% { transform: rotate(0deg); } 25% { transform: rotate(5deg); }
+            50% { transform: rotate(0eg); } 75% { transform: rotate(-5deg); } 100% { transform: rotate(0deg); }
         }
 
-        /* Floating Text */
+        /* Float Text */
         .float-txt {
             position: absolute; color: white; font-weight: 900; font-size: 32px;
-            pointer-events: none; animation: floatUp 0.8s forwards; text-shadow: 0 0 10px var(--sol-green); font-family: var(--font-main);
+            pointer-events: none; animation: floatUp 0.8s forwards; text-shadow: 0 0 10px var(--sol-green);
         }
         @keyframes floatUp { to { transform: translateY(-120px) scale(1.2); opacity: 0; } }
 
@@ -176,6 +177,11 @@
         .nav-btn.active { color: white; transform: translateY(-5px); }
         .nav-btn.active i { color: var(--sol-green); text-shadow: 0 0 15px var(--sol-green); }
 
+        /* Leaderboard */
+        .lb-row { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .lb-rank { color: #888; width: 25px; font-weight: bold; }
+        .lb-val { color: var(--sol-green); font-weight: bold; }
+
     </style>
 </head>
 <body>
@@ -184,10 +190,16 @@
     <div class="header">
         <div class="user-badge glass-panel" style="padding: 6px 12px; border-radius: 30px;">
             <div class="avatar"><i class="ri-user-star-fill"></i></div>
-            <span id="username" style="margin-left: 8px;">Loading...</span>
+            <span id="username">Guest</span>
         </div>
-        <div class="glass-panel" onclick="openLeaderboard()" style="padding: 8px 15px; border-radius: 30px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; border-color: gold;">
-            <i class="ri-trophy-fill" style="color: gold;"></i> Leaderboard
+        
+        <!-- Telegram Join Button -->
+        <a href="https://t.me/YOUR_CHANNEL_USERNAME" target="_blank" class="tg-btn">
+            <i class="ri-telegram-fill"></i> Join Channel
+        </a>
+
+        <div class="glass-panel" onclick="openLeaderboard()" style="padding: 8px; border-radius: 50%; cursor: pointer; border-color: gold;">
+            <i class="ri-trophy-fill" style="color: gold; font-size: 16px;"></i>
         </div>
     </div>
 
@@ -204,96 +216,66 @@
             </div>
         </div>
 
-        <div class="energy-box">
-            <div class="energy-info">
-                <span>⚡ Energy</span>
-                <span id="energy-txt">200/200</span>
-            </div>
+        <div class="stats-row">
+            <div style="font-size: 11px; color: #888;">⚡ <span id="energy-txt">200</span></div>
             <div class="energy-track">
                 <div class="energy-fill" id="energy-fill"></div>
             </div>
-            <div style="text-align: center; font-size: 12px; color: #666; margin-top: 10px;">
-                <i class="ri-flashlight-fill" style="color: var(--sol-purple);"></i> 
-                Auto-Miner: <span id="auto-rate">0</span>/sec
-            </div>
+            <div style="font-size: 11px; color: var(--sol-purple);">🤖 <span id="auto-rate">0</span>/s</div>
         </div>
     </div>
 
-    <!-- 2. TASKS TAB (DYNAMIC) -->
+    <!-- 2. TASKS TAB -->
     <div id="screen-tasks" class="screen">
-        <h2 style="margin-bottom: 5px;">Missions</h2>
-        <p style="font-size: 12px; color: #888; margin-bottom: 20px;">Complete tasks to earn huge rewards.</p>
-        <div id="task-list">
-            <div style="text-align:center; padding:20px; color:#666;">Loading Tasks...</div>
-        </div>
+        <h2>Missions</h2>
+        <div id="task-list"><div style="text-align:center; padding:20px;">Loading...</div></div>
     </div>
 
     <!-- 3. BOOST TAB -->
     <div id="screen-boost" class="screen">
-        <h2 style="color: var(--sol-green);">Mining Lab</h2>
+        <h2 style="color: var(--sol-green);">Upgrade Lab</h2>
         
-        <!-- Upgrade -->
+        <!-- Auto Bot Upgrade -->
         <div class="glass-panel task-item">
             <div style="font-size: 30px;">🤖</div>
             <div style="flex: 1;">
-                <div style="font-weight: bold;">Auto-Bot V1</div>
-                <div style="font-size: 12px; color: #888;">Generates 1 coin/sec</div>
+                <div style="font-weight: bold;">Auto-Miner</div>
+                <div style="font-size: 12px; color: #888;">Max Level: 10/s</div>
             </div>
-            <button class="task-btn" onclick="buyBot()">Buy 500</button>
+            <button class="task-btn" onclick="buyBot()">Buy 1k</button>
         </div>
 
-        <!-- Ad Grid -->
-        <h3 style="margin-top: 25px;">Magic Claims</h3>
-        <p style="font-size: 11px; color: #888; margin-bottom: 10px;">Claim rewards. Cooldowns apply.</p>
+        <!-- Magic Claims (Rank Images) -->
+        <h3 style="margin-top: 25px;">Magic Rewards</h3>
         <div id="ad-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;"></div>
     </div>
 
-    <!-- 4. WALLET TAB (PREMIUM) -->
+    <!-- 4. WALLET TAB -->
     <div id="screen-wallet" class="screen">
         <div class="wallet-card">
-            <div style="font-size: 14px; opacity: 0.8;">Total Asset Value</div>
+            <div style="font-size: 14px; opacity: 0.8;">Asset Value</div>
             <div style="font-size: 38px; font-weight: 900; margin: 5px 0; font-family: var(--font-main);">$<span id="usd-val">0.00</span></div>
-            <div class="live-price">
-                <img src="https://cryptologos.cc/logos/solana-sol-logo.png" width="14">
-                1 SOL ≈ $<span id="sol-price">148.50</span> <span class="price-up">(+1.2%)</span>
-            </div>
+            <div class="live-price">1 SOL ≈ $<span id="sol-price">148.50</span></div>
         </div>
 
-        <h3 style="margin-bottom: 15px;">Swap</h3>
-        
-        <div class="swap-container">
-            <!-- From -->
-            <div class="swap-box">
-                <div style="display: flex; align-items: center;">
-                    <div style="width:30px; height:30px; background:radial-gradient(circle,#ffd700,#ff8c00); border-radius:50%; display:flex; justify-content:center; align-items:center; margin-right:10px; font-weight:bold; font-size:10px; color:black;">BIT</div>
-                    <div>
-                        <div style="font-size: 10px; color: #888;">From</div>
-                        <div style="font-weight: bold;">SolBits</div>
-                    </div>
-                </div>
-                <div class="swap-input" id="swap-in">0</div>
+        <h3>Swap</h3>
+        <div class="swap-box">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:25px; height:25px; background:orange; border-radius:50%; display:flex; justify-content:center; align-items:center; color:black; font-size:10px; font-weight:bold;">B</div>
+                <div><div style="font-size:10px; color:#888;">From</div><b>SolBits</b></div>
             </div>
-
-            <div style="text-align: center; margin: -20px 0; position: relative; z-index: 5;">
-                <i class="ri-arrow-up-down-fill" style="background: #111; padding: 6px; border-radius: 50%; border: 1px solid #333;"></i>
+            <div class="swap-input" id="swap-in">0</div>
+        </div>
+        <div style="text-align:center; margin:-20px 0; z-index:5;"><i class="ri-arrow-up-down-fill" style="background:#111; padding:5px; border-radius:50%; border:1px solid #333;"></i></div>
+        <div class="swap-box">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <img src="https://cryptologos.cc/logos/solana-sol-logo.png" width="25">
+                <div><div style="font-size:10px; color:#888;">To</div><b>Solana</b></div>
             </div>
-
-            <!-- To -->
-            <div class="swap-box">
-                <div style="display: flex; align-items: center;">
-                    <img src="https://cryptologos.cc/logos/solana-sol-logo.png" class="swap-icon">
-                    <div>
-                        <div style="font-size: 10px; color: #888;">To</div>
-                        <div style="font-weight: bold;">Solana</div>
-                    </div>
-                </div>
-                <div class="swap-input" id="swap-out" style="color: var(--sol-green);">0.00</div>
-            </div>
+            <div class="swap-input" id="swap-out" style="color:var(--sol-green);">0.00</div>
         </div>
 
-        <button class="btn-action" onclick="alert('Withdrawals open in Phase 2!')">
-            Connect Wallet
-        </button>
+        <button class="btn-action" onclick="alert('Phase 2')">Connect Wallet</button>
     </div>
 
     <!-- BOTTOM NAV -->
@@ -304,26 +286,34 @@
         <div class="nav-btn" onclick="nav('wallet', this)"><i class="ri-wallet-3-fill"></i><span>Wallet</span></div>
     </div>
 
-    <!-- MODAL: LIMIT REACHED -->
-    <div id="limit-modal" class="modal-overlay">
+    <!-- MODAL: MYSTERY GIFT -->
+    <div id="gift-modal" class="modal-overlay">
         <div class="modal-box">
-            <i class="ri-battery-2-fill" style="font-size: 50px; color: #ff4757;"></i>
-            <h3>Energy Empty!</h3>
-            <p style="color: #aaa; font-size: 14px; margin-bottom: 20px;">Watch a short ad to fully recharge your energy.</p>
-            <button class="btn-action" onclick="watchRefillAd()">📺 Watch Ad (Refill)</button>
+            <img src="https://cdn-icons-png.flaticon.com/512/3855/3855336.png" class="gift-img">
+            <h3>Mystery Gift!</h3>
+            <p style="color:#aaa; font-size:14px;">You found a hidden supply drop!</p>
+            <button class="btn-action" onclick="claimMysteryGift()">✨ Open & Claim</button>
         </div>
     </div>
 
     <!-- MODAL: LEADERBOARD -->
     <div id="lb-modal" class="modal-overlay">
-        <div class="modal-box" style="height: 70%; display: flex; flex-direction: column;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                <h3 style="margin:0;">🏆 Top Miners</h3>
-                <i class="ri-close-circle-fill" style="font-size: 28px; cursor: pointer;" onclick="document.getElementById('lb-modal').style.display='none'"></i>
+        <div class="modal-box" style="height:70%; display:flex; flex-direction:column;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+                <h3>🏆 Top Miners</h3>
+                <i class="ri-close-line" style="font-size:24px;" onclick="document.getElementById('lb-modal').style.display='none'"></i>
             </div>
-            <div id="lb-list" style="overflow-y: auto; flex: 1; text-align: left;">
-                <div style="text-align:center; padding:20px;">Loading...</div>
-            </div>
+            <div id="lb-list" style="overflow-y:auto; flex:1; text-align:left;">Loading...</div>
+        </div>
+    </div>
+
+    <!-- MODAL: ENERGY LIMIT -->
+    <div id="limit-modal" class="modal-overlay">
+        <div class="modal-box">
+            <i class="ri-battery-2-line" style="font-size:48px; color:#ff4757;"></i>
+            <h3>Energy Empty</h3>
+            <p style="color:#aaa;">Watch an ad to recharge fully.</p>
+            <button class="btn-action" onclick="watchRefillAd()">📺 Recharge</button>
         </div>
     </div>
 
@@ -332,7 +322,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, set, get, update, query, orderByChild, limitToLast } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // CONFIG (FACELYZE)
+        // CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyAhyInLPhouHDZCPML-AvfOcns2Li9tWmM",
             authDomain: "facelyze.firebaseapp.com",
@@ -358,150 +348,99 @@
             completedTasks: []
         };
         const AD_SLOTS = [2, 5, 10, 15, 30, 60];
+        
+        // PREMIUM IMAGES FOR ADS (Potion, Scroll, Gem, Chest, Crown, Trophy)
+        const RANK_IMGS = [
+            "https://cdn-icons-png.flaticon.com/512/2534/2534204.png", // Potion
+            "https://cdn-icons-png.flaticon.com/512/3067/3067822.png", // Scroll
+            "https://cdn-icons-png.flaticon.com/512/2790/2790333.png", // Gem
+            "https://cdn-icons-png.flaticon.com/512/4043/4043224.png", // Chest
+            "https://cdn-icons-png.flaticon.com/512/2503/2503738.png", // Crown
+            "https://cdn-icons-png.flaticon.com/512/3112/3112946.png"  // Trophy
+        ];
 
         // INIT
         async function init() {
             if (tg.initDataUnsafe?.user) {
                 user.id = tg.initDataUnsafe.user.id.toString();
                 user.username = tg.initDataUnsafe.user.first_name;
-            } else {
-                user.id = "test_user_v2"; // Dev Mode
-            }
+            } else { user.id = "test_user_ultra"; }
             document.getElementById('username').innerText = user.username;
 
-            // Load User
             try {
                 const snap = await get(ref(db, 'sol_users/' + user.id));
                 if (snap.exists()) {
                     const d = snap.val();
                     user.score = Number(d.score || 0);
-                    user.energy = (d.energy !== undefined) ? Number(d.energy) : 200;
+                    user.energy = d.energy !== undefined ? Number(d.energy) : 200;
                     user.autoMiner = Number(d.autoMiner || 0);
                     user.adClaims = d.adClaims || user.adClaims;
                     user.completedTasks = d.completedTasks || [];
-                } else {
-                    saveUser();
-                }
+                } else { saveUser(); }
             } catch (e) { console.log("DB Error"); }
 
-            // Init Dynamic Tasks
-            initDefaultTasks(); 
+            initDefaultTasks();
             loadTasks();
-
-            // Render
             updateUI();
             renderAds();
+            spawnMysteryGift(); // Start Mystery Logic
+
             setInterval(saveUser, 4000);
             setInterval(autoMine, 1000);
             setInterval(checkAds, 1000);
         }
 
-        function saveUser() {
-            if(user.id) update(ref(db, 'sol_users/' + user.id), user);
-        }
+        function saveUser() { if(user.id) update(ref(db, 'sol_users/' + user.id), user); }
 
         function updateUI() {
-            // Mine
+            // MINE
             document.getElementById('score').innerText = Math.floor(user.score).toLocaleString();
-            document.getElementById('energy-txt').innerText = `${user.energy}/${user.maxEnergy}`;
+            document.getElementById('energy-txt').innerText = user.energy;
             document.getElementById('energy-fill').style.width = `${(user.energy/user.maxEnergy)*100}%`;
             document.getElementById('auto-rate').innerText = user.autoMiner;
 
-            // Wallet
+            // WALLET (10000 = 1 SOL)
             const sol = user.score / 10000;
             document.getElementById('swap-in').innerText = Math.floor(user.score);
             document.getElementById('swap-out').innerText = sol.toFixed(4);
             document.getElementById('usd-val').innerText = (sol * 148.50).toFixed(2);
         }
 
-        // --- TAP ---
+        // --- TAP LOGIC ---
         document.getElementById('tap-btn').addEventListener('click', (e) => {
             if (user.energy <= 0) {
                 document.getElementById('limit-modal').style.display = 'flex';
                 return;
             }
-            user.score++;
-            user.energy--;
+            user.score++; user.energy--;
             updateUI();
-
-            // FX
-            const fl = document.createElement('div');
-            fl.className = 'float-txt'; fl.innerText = '+1';
+            const fl = document.createElement('div'); fl.className = 'float-txt'; fl.innerText = '+1';
             fl.style.left = e.clientX + 'px'; fl.style.top = e.clientY + 'px';
-            document.body.appendChild(fl);
-            setTimeout(()=>fl.remove(), 800);
+            document.body.appendChild(fl); setTimeout(()=>fl.remove(), 800);
             tg.HapticFeedback.impactOccurred('light');
         });
 
-        // --- TASKS (DATABASE) ---
-        async function initDefaultTasks() {
-            // Creates tasks if DB is empty
-            const snap = await get(ref(db, 'tasks'));
-            if (!snap.exists()) {
-                const defaults = {
-                    t1: { title: "Join Community", reward: 200, img: "https://cdn-icons-png.flaticon.com/512/2111/2111646.png" },
-                    t2: { title: "Follow X", reward: 200, img: "https://cdn-icons-png.flaticon.com/512/733/733579.png" },
-                    t3: { title: "Visit Site", reward: 100, img: "https://cdn-icons-png.flaticon.com/512/1006/1006771.png" }
-                };
-                set(ref(db, 'tasks'), defaults);
-            }
-        }
+        // --- AUTO BOT (Max 10, Cost 1000) ---
+        window.buyBot = () => {
+            if(user.autoMiner >= 10) { tg.showAlert("Max Level Reached!"); return; }
+            if(user.score >= 1000) {
+                user.score -= 1000;
+                user.autoMiner++;
+                saveUser(); updateUI();
+                tg.showAlert("Bot Upgraded!");
+            } else tg.showAlert("Need 1000 Coins");
+        };
+        function autoMine() { if(user.autoMiner > 0) { user.score += user.autoMiner; updateUI(); } }
 
-        async function loadTasks() {
-            const snap = await get(ref(db, 'tasks'));
-            const list = document.getElementById('task-list');
-            list.innerHTML = '';
-
-            if(snap.exists()) {
-                const tasks = snap.val();
-                Object.keys(tasks).forEach(key => {
-                    const t = tasks[key];
-                    const done = user.completedTasks.includes(key);
-                    const div = document.createElement('div');
-                    div.className = 'glass-panel task-item';
-                    div.innerHTML = `
-                        <img src="${t.img}" class="task-img">
-                        <div style="flex:1;">
-                            <div style="font-weight:bold;">${t.title}</div>
-                            <div style="color:var(--sol-green); font-size:12px;">+${t.reward}</div>
-                        </div>
-                        <button class="task-btn ${done ? 'done' : ''}" onclick="doTask('${key}', ${t.reward})">
-                            ${done ? 'Done' : 'Start'}
-                        </button>
-                    `;
-                    list.appendChild(div);
-                });
-            }
-        }
-
-        window.doTask = (key, reward) => {
-            if (user.completedTasks.includes(key)) return;
-            tg.openLink("https://google.com"); 
-            setTimeout(() => {
-                if(confirm("Task completed?")) {
-                    user.score += reward;
-                    user.completedTasks.push(key);
-                    saveUser();
-                    loadTasks();
-                    updateUI();
-                }
-            }, 2000);
-        }
-
-        // --- AD & BOOST ---
+        // --- MAGIC CLAIMS ---
         function renderAds() {
-            const grid = document.getElementById('ad-grid');
-            grid.innerHTML = '';
-            // Using a premium Lightning Icon (3D Style) from CDN
-            const iconUrl = "https://cdn-icons-png.flaticon.com/512/3712/3712170.png";
-            
+            const grid = document.getElementById('ad-grid'); grid.innerHTML = '';
             AD_SLOTS.forEach((min, i) => {
-                const div = document.createElement('div');
-                div.className = 'glass-panel ad-card';
+                const div = document.createElement('div'); div.className = 'glass-panel ad-card';
                 div.innerHTML = `
-                    <img src="${iconUrl}" class="magic-icon">
-                    <div style="font-size:11px;">Wait ${min}m</div>
-                    <div style="font-weight:bold; color:var(--sol-green);">+${min*5}</div>
+                    <img src="${RANK_IMGS[i]}" class="rank-img">
+                    <div style="font-size:10px;">${min}m</div>
+                    <div style="color:var(--sol-green); font-weight:bold;">+${min*5}</div>
                     <button id="ad-btn-${i}" class="task-btn" style="width:100%; margin-top:5px;" onclick="claimAd(${i}, ${min})">Claim</button>
                 `;
                 grid.appendChild(div);
@@ -513,15 +452,12 @@
                 const diff = now - user.adClaims[i];
                 const wait = min * 60000;
                 const btn = document.getElementById(`ad-btn-${i}`);
-                if (btn) {
-                    if (diff < wait) {
-                        btn.disabled = true;
-                        btn.style.opacity = 0.5;
-                        btn.innerText = Math.ceil((wait - diff)/60000) + "m";
+                if(btn) {
+                    if(diff < wait) {
+                        btn.disabled = true; btn.style.opacity = 0.5;
+                        btn.innerText = Math.ceil((wait-diff)/60000)+"m";
                     } else {
-                        btn.disabled = false;
-                        btn.style.opacity = 1;
-                        btn.innerText = "Claim";
+                        btn.disabled = false; btn.style.opacity = 1; btn.innerText = "Claim";
                     }
                 }
             });
@@ -530,90 +466,108 @@
             showAd().then(() => {
                 user.score += (min * 5);
                 user.adClaims[i] = Date.now();
-                saveUser();
-                updateUI();
+                saveUser(); updateUI();
             });
         };
+
+        // --- MYSTERY GIFT ---
+        function spawnMysteryGift() {
+            // Randomly show gift after 15-45 seconds
+            const randTime = Math.random() * 30000 + 15000;
+            setTimeout(() => {
+                document.getElementById('gift-modal').style.display = 'flex';
+            }, randTime);
+        }
+        window.claimMysteryGift = () => {
+            if (typeof show_10252050 === 'function') {
+                show_10252050().then(() => {
+                    const reward = 500;
+                    user.score += reward;
+                    saveUser(); updateUI();
+                    document.getElementById('gift-modal').style.display = 'none';
+                    tg.showAlert(`Amazing! +${reward} Coins!`);
+                    // Schedule next gift
+                    spawnMysteryGift();
+                });
+            } else {
+                alert("Ad Loading...");
+            }
+        };
+
         window.watchRefillAd = () => {
-             showAd().then(() => {
-                user.energy = user.maxEnergy;
-                saveUser();
-                updateUI();
-                document.getElementById('limit-modal').style.display='none';
+            showAd().then(() => {
+                user.energy = user.maxEnergy; saveUser(); updateUI();
+                document.getElementById('limit-modal').style.display = 'none';
             });
         };
 
         function showAd() {
             return new Promise((res, rej) => {
-                if (typeof show_10252050 === 'function') {
-                    show_10252050().then(res).catch(rej);
-                } else {
-                    alert("Ad Simulator"); res();
-                }
+                if(typeof show_10252050 === 'function') show_10252050().then(res).catch(rej);
+                else { alert("Ad Sim"); res(); }
             });
         }
 
-        function autoMine() {
-            if(user.autoMiner > 0) { user.score += user.autoMiner; updateUI(); }
-        }
-        window.buyBot = () => {
-            if(user.score >= 500) { user.score-=500; user.autoMiner++; saveUser(); updateUI(); }
-        }
-
-        // --- LEADERBOARD FIX ---
-        window.openLeaderboard = async () => {
-            document.getElementById('lb-modal').style.display = 'flex';
-            const list = document.getElementById('lb-list');
-            list.innerHTML = '<div style="text-align:center; padding:20px;">Fetching Data...</div>';
-
-            try {
-                // Fetch ALL users then sort in JS (Safer for small/medium apps)
-                const snap = await get(ref(db, 'sol_users'));
-                
-                if (!snap.exists()) {
-                    list.innerHTML = '<div style="text-align:center;">No players yet.</div>';
-                    return;
-                }
-
-                // Convert Object to Array
-                let players = [];
-                snap.forEach(child => {
-                    const p = child.val();
-                    // Ensure score is a number for sorting
-                    players.push({ username: p.username, score: Number(p.score || 0) });
+        // --- TASKS ---
+        async function initDefaultTasks() {
+            const snap = await get(ref(db, 'tasks'));
+            if(!snap.exists()) {
+                set(ref(db, 'tasks'), {
+                    t1: { title: "Join Community", reward: 200, img: "https://cdn-icons-png.flaticon.com/512/2111/2111646.png" },
+                    t2: { title: "Follow X", reward: 200, img: "https://cdn-icons-png.flaticon.com/512/733/733579.png" }
                 });
-
-                // Sort High to Low
-                players.sort((a, b) => b.score - a.score);
-                // Top 20
-                players = players.slice(0, 20);
-
-                list.innerHTML = '';
-                players.forEach((u, i) => {
-                    const div = document.createElement('div');
-                    div.className = 'lb-row';
+            }
+        }
+        async function loadTasks() {
+            const snap = await get(ref(db, 'tasks'));
+            const list = document.getElementById('task-list'); list.innerHTML = '';
+            if(snap.exists()) {
+                const tasks = snap.val();
+                Object.keys(tasks).forEach(key => {
+                    const t = tasks[key];
+                    const done = user.completedTasks.includes(key);
+                    const div = document.createElement('div'); div.className = 'glass-panel task-item';
                     div.innerHTML = `
-                        <div class="lb-rank">#${i+1}</div>
-                        <div>${u.username.substring(0, 15)}</div>
-                        <div class="lb-val">
-                            <img src="https://cryptologos.cc/logos/solana-sol-logo.png" width="12">
-                            ${Math.floor(u.score).toLocaleString()}
-                        </div>
+                        <img src="${t.img}" class="task-img">
+                        <div style="flex:1;"><div style="font-weight:bold;">${t.title}</div><div style="color:var(--sol-green); font-size:11px;">+${t.reward}</div></div>
+                        <button class="task-btn ${done?'done':''}" onclick="doTask('${key}', ${t.reward})">${done?'Done':'Start'}</button>
                     `;
                     list.appendChild(div);
                 });
-
-            } catch (e) {
-                console.error(e);
-                list.innerHTML = '<div style="text-align:center; color:red;">Check Firebase Rules</div>';
             }
-        };
+        }
+        window.doTask = (key, rew) => {
+            if(user.completedTasks.includes(key)) return;
+            tg.openLink("https://google.com");
+            setTimeout(() => {
+                if(confirm("Done?")) { user.score+=rew; user.completedTasks.push(key); saveUser(); loadTasks(); updateUI(); }
+            }, 2000);
+        }
+
+        // --- LEADERBOARD ---
+        window.openLeaderboard = async () => {
+            document.getElementById('lb-modal').style.display = 'flex';
+            const list = document.getElementById('lb-list');
+            list.innerHTML = '<div style="text-align:center; padding:20px;">Fetching...</div>';
+            try {
+                const snap = await get(ref(db, 'sol_users'));
+                if (!snap.exists()) { list.innerHTML = 'No Data'; return; }
+                let arr = [];
+                snap.forEach(c => { const p = c.val(); arr.push({ u: p.username, s: Number(p.score||0) }); });
+                arr.sort((a,b) => b.s - a.s);
+                list.innerHTML = '';
+                arr.slice(0, 20).forEach((p, i) => {
+                    const div = document.createElement('div'); div.className = 'lb-row';
+                    div.innerHTML = `<div class="lb-rank">#${i+1}</div><div>${p.u.substring(0,15)}</div><div class="lb-val">${Math.floor(p.s)}</div>`;
+                    list.appendChild(div);
+                });
+            } catch (e) { list.innerHTML = 'Error'; }
+        }
 
         window.nav = (id, el) => {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('screen-'+id).classList.add('active');
-            el.classList.add('active');
+            document.getElementById('screen-'+id).classList.add('active'); el.classList.add('active');
         };
 
         init();
