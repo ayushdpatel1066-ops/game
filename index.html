@@ -3,228 +3,611 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Tap to Earn</title>
-    
-    <!-- TELEGRAM & AD SDKs -->
+    <title>Solana Miner Premium</title>
+
+    <!-- FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+
+    <!-- SDKS -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://libtl.com/sdk.js" data-zone="10252050" data-sdk="show_10252050"></script>
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
     <style>
-        body {
-            background-color: #000;
-            color: #fff;
-            font-family: 'Segoe UI', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
+        :root {
+            --sol-green: #14F195;
+            --sol-purple: #9945FF;
+            --bg-dark: #000000;
+            --glass: rgba(20, 20, 20, 0.6);
+            --border: rgba(255, 255, 255, 0.1);
         }
 
-        /* PROFILE SECTION (Where Username shows) */
-        .profile-card {
-            background: #1a1a1a;
-            width: 90%;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            border: 1px solid #333;
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(153, 69, 255, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(20, 241, 149, 0.15) 0%, transparent 40%);
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            margin: 0; height: 100vh;
+            overflow: hidden; user-select: none;
+            display: flex; flex-direction: column;
+        }
+
+        /* --- UI COMPONENTS --- */
+        .glass-panel {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+        }
+
+        /* HEADER */
+        .header {
+            padding: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .user-badge {
+            display: flex; align-items: center; gap: 10px;
+            font-weight: 700; font-size: 14px;
         }
         .avatar {
-            width: 50px; height: 50px;
-            background: #444; border-radius: 50%;
-            display: flex; justify-content: center; align-items: center;
-            font-size: 24px;
+            width: 32px; height: 32px;
+            background: linear-gradient(45deg, var(--sol-green), var(--sol-purple));
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
         }
-        .user-details h3 { margin: 0; font-size: 18px; color: #fff; }
-        .user-details p { margin: 0; font-size: 14px; color: #00ccff; }
 
-        /* COIN DISPLAY */
-        .coin-display { margin-top: 30px; text-align: center; }
-        .coin-display h1 { font-size: 50px; margin: 0; }
-        .coin-display span { font-size: 20px; color: #888; }
-
-        /* CLICK BUTTON */
-        .tap-area {
-            flex-grow: 1;
-            display: flex; justify-content: center; align-items: center;
+        /* SCREENS (TABS) */
+        .screen {
+            flex: 1; display: none; flex-direction: column;
+            overflow-y: auto; padding: 20px; padding-bottom: 100px;
         }
-        .tap-btn {
-            width: 240px; height: 240px;
-            background: radial-gradient(circle, #f0932b, #b33939);
+        .screen.active { display: flex; animation: fadeIn 0.3s ease; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- MINING SCREEN --- */
+        .balance-card {
+            text-align: center; margin-bottom: 30px;
+        }
+        .balance-title { color: #888; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+        .balance-amount { 
+            font-size: 48px; font-weight: 900; 
+            background: linear-gradient(to right, #fff, #bbb);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .miner-area {
+            flex: 1; display: flex; align-items: center; justify-content: center; position: relative;
+        }
+        .solana-coin {
+            width: 260px; height: 260px;
             border-radius: 50%;
-            border: 5px solid #fff;
-            box-shadow: 0 0 30px #f0932b;
-            cursor: pointer;
-            transition: transform 0.1s;
+            background: radial-gradient(circle, #1a1a1a, #000);
+            border: 2px solid rgba(153, 69, 255, 0.3);
+            box-shadow: 0 0 60px rgba(153, 69, 255, 0.2);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: transform 0.1s, box-shadow 0.2s;
+            position: relative; z-index: 2;
         }
-        .tap-btn:active { transform: scale(0.95); }
+        .solana-coin img { width: 70%; pointer-events: none; }
+        .solana-coin:active { transform: scale(0.95); box-shadow: 0 0 80px rgba(20, 241, 149, 0.4); }
 
-        /* LOADING SCREEN */
-        #loading {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 999;
-            display: flex; justify-content: center; align-items: center;
-            font-size: 24px;
+        .energy-bar {
+            margin-top: 20px; background: #222; height: 12px; border-radius: 6px; overflow: hidden;
+            position: relative;
+        }
+        .energy-fill {
+            height: 100%; width: 100%;
+            background: linear-gradient(90deg, var(--sol-purple), var(--sol-green));
+            transition: width 0.2s;
+        }
+
+        /* --- BOOST & ADS SCREEN --- */
+        .section-title { font-size: 20px; font-weight: 700; margin-bottom: 15px; color: var(--sol-green); }
+        
+        .ad-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .ad-card {
+            padding: 15px; display: flex; flex-direction: column; align-items: center; gap: 10px;
+            text-align: center; position: relative; overflow: hidden;
+        }
+        .ad-card h4 { margin: 0; font-size: 14px; }
+        .ad-card p { margin: 0; font-size: 12px; color: #888; }
+        .btn-claim {
+            background: white; color: black; border: none; padding: 8px 16px;
+            border-radius: 8px; font-weight: 700; font-size: 12px; width: 100%; cursor: pointer;
+        }
+        .btn-claim:disabled { background: #333; color: #666; cursor: not-allowed; }
+        
+        .upgrade-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px; margin-bottom: 10px;
+        }
+
+        /* --- WALLET SCREEN --- */
+        .wallet-card {
+            background: linear-gradient(135deg, var(--sol-purple), #5e28a5);
+            padding: 25px; border-radius: 25px; margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(153, 69, 255, 0.3);
+        }
+        .live-price { font-size: 12px; opacity: 0.8; margin-top: 10px; display: flex; align-items: center; gap: 5px; }
+        .price-up { color: #8aff8a; }
+
+        .swap-container { margin-top: 20px; }
+        .swap-box {
+            background: #111; padding: 15px; border-radius: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            border: 1px solid #333; margin-bottom: 10px;
+        }
+        .swap-icon { width: 30px; height: 30px; border-radius: 50%; margin-right: 10px; }
+        .swap-input { background: transparent; border: none; color: white; font-size: 18px; text-align: right; width: 100px; outline: none; }
+        
+        .btn-action {
+            width: 100%; padding: 18px; border-radius: 15px; border: none;
+            background: linear-gradient(45deg, var(--sol-green), #0abf70);
+            color: #000; font-weight: 800; font-size: 16px; margin-top: 15px;
+            cursor: pointer;
+        }
+
+        /* --- BOTTOM NAV --- */
+        .bottom-nav {
+            position: fixed; bottom: 20px; left: 20px; right: 20px;
+            height: 70px; display: flex; justify-content: space-around; align-items: center;
+            z-index: 100;
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center;
+            color: #666; font-size: 10px; gap: 4px; transition: 0.2s;
+            cursor: pointer;
+        }
+        .nav-item i { font-size: 24px; }
+        .nav-item.active { color: var(--sol-green); transform: translateY(-5px); }
+        .nav-item.active i { text-shadow: 0 0 10px var(--sol-green); }
+
+        /* ANIMATIONS */
+        .float-text {
+            position: absolute; color: white; font-weight: 900; font-size: 28px;
+            pointer-events: none; animation: floatUp 0.8s ease-out forwards;
+            text-shadow: 0 0 10px var(--sol-purple);
+        }
+        @keyframes floatUp { to { transform: translateY(-120px) scale(1.2); opacity: 0; } }
+        
+        /* Modal */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 200; justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: #1a1a1a; padding: 30px; border-radius: 25px; text-align: center;
+            width: 80%; border: 1px solid var(--sol-purple);
         }
     </style>
 </head>
 <body>
 
-    <!-- Loading Screen -->
-    <div id="loading">Logging in...</div>
+    <!-- LOADING OVERLAY -->
+    <div id="loader" style="position:fixed; inset:0; background:#000; z-index:999; display:flex; justify-content:center; align-items:center; flex-direction:column;">
+        <img src="https://cryptologos.cc/logos/solana-sol-logo.png" width="80" style="margin-bottom:20px; animation: pulse 2s infinite;">
+        <div style="color:var(--sol-green);">Connecting to Solana...</div>
+    </div>
 
-    <!-- User Profile Header -->
-    <div class="profile-card">
-        <div class="avatar">👤</div>
-        <div class="user-details">
-            <h3 id="display-username">Guest</h3>
-            <p>ID: <span id="display-id">...</span></p>
+    <!-- HEADER -->
+    <div class="header">
+        <div class="user-badge glass-panel" style="padding: 8px 12px; border-radius: 30px;">
+            <div class="avatar"><i class="ri-user-fill"></i></div>
+            <span id="username">Guest</span>
+        </div>
+        <div class="glass-panel" style="padding: 8px 12px; border-radius: 30px; font-size: 12px;">
+            <a href="https://t.me/yourchannel" target="_blank" style="color:white; text-decoration:none;">
+                <i class="ri-telegram-fill" style="color:#0088cc;"></i> Join Channel
+            </a>
         </div>
     </div>
 
-    <!-- Coin Balance -->
-    <div class="coin-display">
-        <h1 id="score">0</h1>
-        <span>COINS</span>
+    <!-- SCREEN 1: MINING -->
+    <div id="screen-mine" class="screen active">
+        <div class="balance-card">
+            <div class="balance-title">Current Balance</div>
+            <div class="balance-amount"><span id="score">0</span> SOL-BITS</div>
+        </div>
+
+        <div class="miner-area">
+            <div class="solana-coin" id="tap-btn">
+                <img src="https://cryptologos.cc/logos/solana-sol-logo.png?v=029" alt="Solana">
+            </div>
+        </div>
+
+        <div style="margin-top: auto;">
+            <div style="display:flex; justify-content:space-between; font-size:12px; color:#888;">
+                <span>⚡ Energy</span>
+                <span id="energy-txt">1000/1000</span>
+            </div>
+            <div class="energy-bar">
+                <div class="energy-fill" id="energy-fill"></div>
+            </div>
+        </div>
     </div>
 
-    <!-- Tap Button -->
-    <div class="tap-area">
-        <div class="tap-btn" id="tap-btn"></div>
+    <!-- SCREEN 2: ADS & TASKS -->
+    <div id="screen-tasks" class="screen">
+        <div class="section-title">📺 Watch & Earn (Instant)</div>
+        <p style="font-size:12px; color:#888; margin-bottom:20px;">Watch ads to claim extra SOL-BITS. Timers reset individually.</p>
+        
+        <div class="ad-grid" id="ad-grid">
+            <!-- Ad Cards Generated via JS -->
+        </div>
+
+        <div class="section-title" style="margin-top: 30px;">🛠 Mining Equipment</div>
+        <div class="glass-panel upgrade-row">
+            <div>
+                <h4>GPU Overclock</h4>
+                <p>+1 per tap</p>
+            </div>
+            <button class="btn-claim" id="btn-upgrade" style="width: auto; background: var(--sol-purple); color: white;">
+                Upgrade (500)
+            </button>
+        </div>
     </div>
 
-    <!-- Ad Button -->
-    <div style="width:90%; margin-bottom: 20px;">
-        <button id="ad-btn" style="width:100%; padding:15px; background:#007bff; color:white; border:none; border-radius:10px; font-weight:bold;">
-            Watch Ad (+1000 Coins)
-        </button>
+    <!-- SCREEN 3: WALLET -->
+    <div id="screen-wallet" class="screen">
+        <div class="wallet-card">
+            <div style="font-size:14px; opacity:0.7;">Total Estimate Value</div>
+            <div style="font-size:32px; font-weight:800;">$<span id="usd-val">0.00</span></div>
+            <div class="live-price">
+                <img src="https://cryptologos.cc/logos/solana-sol-logo.png" width="16">
+                1 SOL = $<span id="sol-price">145.20</span> <span class="price-up">(+2.4%)</span>
+            </div>
+        </div>
+
+        <div class="section-title">🔄 Swap & Withdraw</div>
+        
+        <div class="swap-container">
+            <!-- From -->
+            <div class="swap-box">
+                <div style="display:flex; align-items:center;">
+                    <div style="width:30px; height:30px; background:radial-gradient(circle,#ffd700,#ff8c00); border-radius:50%; display:flex; justify-content:center; align-items:center; margin-right:10px; font-weight:bold; font-size:10px; color:black;">BIT</div>
+                    <span>SolBits</span>
+                </div>
+                <div id="swap-input" style="font-size:18px;">0</div>
+            </div>
+            
+            <div style="text-align:center; margin:-15px 0;"><i class="ri-arrow-up-down-line" style="background:#222; padding:5px; border-radius:50%;"></i></div>
+
+            <!-- To -->
+            <div class="swap-box">
+                <div style="display:flex; align-items:center;">
+                    <img src="https://cryptologos.cc/logos/solana-sol-logo.png" class="swap-icon">
+                    <span>SOL</span>
+                </div>
+                <span id="swap-output" style="color:var(--sol-green);">0.00</span>
+            </div>
+        </div>
+
+        <button class="btn-action" id="withdraw-btn">Connect Wallet & Withdraw</button>
+
+        <div style="margin-top:20px; text-align:center; font-size:12px; color:#666;">
+            Minimum Withdrawal: 0.5 SOL
+        </div>
     </div>
 
-    <!-- LOGIC SCRIPT -->
+    <!-- BOTTOM NAV -->
+    <div class="bottom-nav glass-panel">
+        <div class="nav-item active" onclick="switchTab('mine', this)">
+            <i class="ri-hammer-fill"></i>
+            <span>Mine</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('tasks', this)">
+            <i class="ri-rocket-2-fill"></i>
+            <span>Boost</span>
+        </div>
+        <div class="nav-item" onclick="switchTab('wallet', this)">
+            <i class="ri-wallet-3-fill"></i>
+            <span>Wallet</span>
+        </div>
+    </div>
+
+    <!-- SUCCESS MODAL -->
+    <div id="msg-modal" class="modal">
+        <div class="modal-content">
+            <i class="ri-checkbox-circle-fill" style="font-size:50px; color:var(--sol-green);"></i>
+            <h2 id="modal-title">Success</h2>
+            <p id="modal-msg" style="color:#aaa;">Operation completed.</p>
+            <button class="btn-claim" style="margin-top:20px; background:var(--sol-green);" onclick="closeModal()">Awesome</button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // --- 1. YOUR FIREBASE CONFIG ---
-    const firebaseConfig = {
-  apiKey: "AIzaSyAhyInLPhouHDZCPML-AvfOcns2Li9tWmM",
-  authDomain: "facelyze.firebaseapp.com",
-  databaseURL: "https://facelyze-default-rtdb.firebaseio.com",
-  projectId: "facelyze",
-  storageBucket: "facelyze.firebasestorage.app",
-  messagingSenderId: "814580139011",
-  appId: "1:814580139011:web:55ad90f052e7de32d93a36",
-  measurementId: "G-4GZYKL9QWG"
-};
+        // --- 1. CONFIGURATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyD339qRMQmBCdB8FETbCK2DOf6oMETeudE",
+            authDomain: "zplaybox-6d198.firebaseapp.com",
+            databaseURL: "https://zplaybox-6d198-default-rtdb.firebaseio.com",
+            projectId: "zplaybox-6d198",
+            storageBucket: "zplaybox-6d198.firebasestorage.app",
+            messagingSenderId: "62948869233",
+            appId: "1:62948869233:web:6f65d78f5a9c8134dc07d0"
+        };
+
+        // Ad Slots Configuration (Time in Minutes)
+        const AD_SLOTS = [
+            { id: 0, time: 2, reward: 2 }, // 2 Minutes
+            { id: 1, time: 3, reward: 2 },
+            { id: 2, time: 5, reward: 5 },
+            { id: 3, time: 10, reward: 10 },
+            { id: 4, time: 15, reward: 15 },
+            { id: 5, time: 30, reward: 50 }
+        ];
+
+        // --- 2. INIT SYSTEM ---
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const tg = window.Telegram.WebApp;
         tg.expand();
+        tg.enableClosingConfirmation();
 
-        // Variables
-        let userId = null;
-        let username = "Unknown";
-        let score = 0;
+        // Game State
+        let state = {
+            id: null,
+            username: "Guest",
+            score: 0,
+            energy: 1000,
+            maxEnergy: 1000,
+            multitap: 1,
+            adClaims: [0,0,0,0,0,0] // Timestamps of last claims
+        };
+        
+        let unsavedChanges = false;
+        let mockSolPrice = 145.20;
 
-        // UI References
-        const scoreEl = document.getElementById('score');
-        const usernameEl = document.getElementById('display-username');
-        const idEl = document.getElementById('display-id');
-        const loadingEl = document.getElementById('loading');
-
-        // --- 2. LOGIN LOGIC (Start App) ---
-        async function startApp() {
-            // Check if running inside Telegram
-            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                
-                // Get Telegram Data
-                const user = tg.initDataUnsafe.user;
-                userId = user.id.toString(); // IMPORTANT: This is the Key
-                username = user.first_name + (user.last_name ? " " + user.last_name : "");
-
-                // Update UI immediately
-                usernameEl.innerText = username;
-                idEl.innerText = userId;
-
-                // Fetch Score from Firebase
-                const userRef = ref(db, 'users/' + userId);
-                try {
-                    const snapshot = await get(userRef);
-                    if (snapshot.exists()) {
-                        // USER EXISTS: Load their score
-                        const data = snapshot.val();
-                        score = data.score || 0;
-                        console.log("Welcome back, " + username);
-                    } else {
-                        // NEW USER: Create account in DB
-                        await set(userRef, {
-                            username: username,
-                            score: 0,
-                            joined: Date.now()
-                        });
-                        score = 0;
-                        console.log("New user created");
-                    }
-                    // Update Score on Screen
-                    scoreEl.innerText = score;
-                } catch (error) {
-                    console.error("Database Error:", error);
-                    alert("Error loading data. Check internet.");
-                }
-
+        // --- 3. CORE LOGIC ---
+        
+        async function init() {
+            // Check Telegram User
+            if (tg.initDataUnsafe?.user) {
+                state.id = tg.initDataUnsafe.user.id.toString();
+                state.username = tg.initDataUnsafe.user.first_name;
             } else {
-                // Not in Telegram (Testing in Browser)
-                usernameEl.innerText = "Browser Tester";
-                idEl.innerText = "000000";
-                alert("Please open this inside Telegram to save progress.");
+                // Testing Mode
+                state.id = "test_user_premium";
+                state.username = "Dev Tester";
             }
 
-            // Hide Loading Screen
-            loadingEl.style.display = 'none';
+            document.getElementById('username').innerText = state.username;
+
+            // Load Data
+            const userRef = ref(db, 'sol_users/' + state.id);
+            const snapshot = await get(userRef);
+
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                state.score = data.score || 0;
+                state.energy = data.energy || 1000;
+                state.multitap = data.multitap || 1;
+                state.adClaims = data.adClaims || [0,0,0,0,0,0];
+            } else {
+                // New User
+                updateDB();
+            }
+
+            document.getElementById('loader').style.display = 'none';
+            updateUI();
+            startTimers();
         }
 
-        // --- 3. TAP LOGIC ---
-        document.getElementById('tap-btn').addEventListener('click', () => {
-            if (!userId) return; // Don't allow taps if not logged in
+        function updateDB() {
+            if(!state.id) return;
+            update(ref(db, 'sol_users/' + state.id), state);
+            unsavedChanges = false;
+        }
 
-            score++;
-            scoreEl.innerText = score;
+        // --- 4. GAMEPLAY ---
 
-            // SAVE to Firebase
-            // To save battery/data, we use debounce or save specifically. 
-            // For simplicity here, we update the DB logic.
-            update(ref(db, 'users/' + userId), {
-                score: score,
-                username: username // Ensure name is always current
-            });
-
-            tg.HapticFeedback.impactOccurred('light');
+        // Tap Handler
+        document.getElementById('tap-btn').addEventListener('click', (e) => {
+            if (state.energy >= state.multitap) {
+                // Logic
+                state.score += state.multitap;
+                state.energy -= state.multitap;
+                
+                // UI
+                document.getElementById('score').innerText = state.score.toLocaleString();
+                updateEnergyUI();
+                
+                // Effects
+                showFloatText(e.clientX, e.clientY, `+${state.multitap}`);
+                tg.HapticFeedback.impactOccurred('medium');
+                
+                // Sync Trigger
+                unsavedChanges = true;
+            } else {
+                tg.HapticFeedback.notificationOccurred('error');
+            }
         });
 
-        // --- 4. AD LOGIC ---
-        document.getElementById('ad-btn').addEventListener('click', () => {
-             if (typeof show_10252050 === 'function') {
+        // Energy Regen
+        setInterval(() => {
+            if (state.energy < state.maxEnergy) {
+                state.energy += 1;
+                updateEnergyUI();
+            }
+        }, 1000);
+
+        // Auto Save Loop (Every 3s)
+        setInterval(() => {
+            if (unsavedChanges) updateDB();
+        }, 3000);
+
+        // --- 5. AD SYSTEM (COMPLEX) ---
+        
+        function renderAds() {
+            const grid = document.getElementById('ad-grid');
+            grid.innerHTML = '';
+
+            AD_SLOTS.forEach((slot, index) => {
+                const div = document.createElement('div');
+                div.className = 'glass-panel ad-card';
+                div.innerHTML = `
+                    <div style="font-size:24px;">📺</div>
+                    <h4>Slot #${index + 1}</h4>
+                    <p>Reward: ${slot.reward} Bits</p>
+                    <button id="btn-ad-${index}" class="btn-claim" onclick="window.claimAd(${index})">
+                        Claim
+                    </button>
+                `;
+                grid.appendChild(div);
+            });
+            checkAdTimers();
+        }
+
+        window.claimAd = (index) => {
+            if (typeof show_10252050 === 'function') {
                 show_10252050().then(() => {
-                    score += 1000;
-                    scoreEl.innerText = score;
-                    // Save immediately after ad
-                    if(userId) {
-                        update(ref(db, 'users/' + userId), { score: score });
-                    }
-                    tg.showAlert("Success! +1000 Coins");
+                    // Success
+                    const reward = AD_SLOTS[index].reward;
+                    state.score += reward;
+                    state.adClaims[index] = Date.now(); // Set timestamp
+                    
+                    updateUI();
+                    updateDB();
+                    checkAdTimers(); // Refresh buttons
+                    
+                    showModal('Reward Claimed', `You received ${reward} SOL-BITS!`);
+                }).catch(e => {
+                     showModal('Error', 'Ad was skipped or failed to load.');
                 });
+            } else {
+                showModal('System', 'Ad Network Loading...');
+            }
+        };
+
+        function checkAdTimers() {
+            const now = Date.now();
+            AD_SLOTS.forEach((slot, index) => {
+                const btn = document.getElementById(`btn-ad-${index}`);
+                if(!btn) return;
+
+                const lastClaim = state.adClaims[index] || 0;
+                const cooldownMS = slot.time * 60 * 1000;
+                const diff = now - lastClaim;
+
+                if (diff < cooldownMS) {
+                    // Cooldown active
+                    const remaining = Math.ceil((cooldownMS - diff) / 1000);
+                    const mins = Math.floor(remaining / 60);
+                    const secs = remaining % 60;
+                    btn.disabled = true;
+                    btn.innerText = `${mins}:${secs < 10 ? '0'+secs : secs}`;
+                } else {
+                    // Ready
+                    btn.disabled = false;
+                    btn.innerText = "WATCH AD";
+                    btn.style.background = "var(--sol-green)";
+                }
+            });
+        }
+
+        function startTimers() {
+            renderAds();
+            setInterval(checkAdTimers, 1000); // Update timers every second
+            
+            // Live Price Simulation
+            setInterval(() => {
+                const change = (Math.random() - 0.5) * 0.5;
+                mockSolPrice += change;
+                document.getElementById('sol-price').innerText = mockSolPrice.toFixed(2);
+                updateWalletUI();
+            }, 5000);
+        }
+
+        // --- 6. WALLET LOGIC ---
+
+        function updateWalletUI() {
+            // 10,000 Bits = 1 SOL (Example Rate)
+            const conversionRate = 10000;
+            const solValue = state.score / conversionRate;
+            const usdValue = solValue * mockSolPrice;
+
+            document.getElementById('usd-val').innerText = usdValue.toFixed(2);
+            document.getElementById('swap-input').innerText = state.score.toLocaleString();
+            document.getElementById('swap-output').innerText = solValue.toFixed(4);
+        }
+
+        document.getElementById('withdraw-btn').addEventListener('click', () => {
+             const solValue = state.score / 10000;
+             if(solValue < 0.5) {
+                 showModal('Withdraw Failed', 'Minimum withdrawal is 0.5 SOL. Keep mining!');
              } else {
-                 alert("Ad loading...");
+                 showModal('Connect Wallet', 'This feature is in Demo Mode. Real withdrawals coming soon!');
              }
         });
 
-        // Run the startup
-        startApp();
+        document.getElementById('btn-upgrade').addEventListener('click', () => {
+            const cost = 500;
+            if (state.score >= cost) {
+                state.score -= cost;
+                state.multitap += 1;
+                updateDB();
+                updateUI();
+                showModal('Upgraded!', 'Multitap level increased.');
+            } else {
+                showModal('Failed', 'Not enough coins!');
+            }
+        });
+
+        // --- 7. HELPER FUNCTIONS ---
+
+        function updateUI() {
+            document.getElementById('score').innerText = state.score.toLocaleString();
+            updateEnergyUI();
+            updateWalletUI();
+        }
+
+        function updateEnergyUI() {
+            document.getElementById('energy-txt').innerText = `${state.energy}/${state.maxEnergy}`;
+            document.getElementById('energy-fill').style.width = `${(state.energy/state.maxEnergy)*100}%`;
+        }
+
+        function showFloatText(x, y, text) {
+            const el = document.createElement('div');
+            el.className = 'float-text';
+            el.innerText = text;
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 800);
+        }
+        
+        // Tab Switcher
+        window.switchTab = (tabName, el) => {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            document.getElementById('screen-' + tabName).classList.add('active');
+            el.classList.add('active');
+            tg.HapticFeedback.selectionChanged();
+        };
+
+        // Modal Helpers
+        window.showModal = (title, msg) => {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-msg').innerText = msg;
+            document.getElementById('msg-modal').style.display = 'flex';
+        }
+        window.closeModal = () => {
+            document.getElementById('msg-modal').style.display = 'none';
+        }
+
+        // Start
+        init();
 
     </script>
 </body>
