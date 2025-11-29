@@ -75,6 +75,35 @@
         .solana-coin img { width: 75%; pointer-events: none; }
         .solana-coin:active { transform: scale(0.92); border-color: var(--sol-green); }
 
+
+
+          /* --- WALLET SCREEN --- */
+        .wallet-card {
+            background: linear-gradient(135deg, var(--sol-purple), #5e28a5);
+            padding: 25px; border-radius: 25px; margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(153, 69, 255, 0.3);
+        }
+        .live-price { font-size: 12px; opacity: 0.8; margin-top: 10px; display: flex; align-items: center; gap: 5px; }
+        .price-up { color: #8aff8a; }
+
+        .swap-container { margin-top: 20px; }
+        .swap-box {
+            background: #111; padding: 15px; border-radius: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            border: 1px solid #333; margin-bottom: 10px;
+        }
+        .swap-icon { width: 30px; height: 30px; border-radius: 50%; margin-right: 10px; }
+        .swap-input { background: transparent; border: none; color: white; font-size: 18px; text-align: right; width: 100px; outline: none; }
+        
+        .btn-action {
+            width: 100%; padding: 18px; border-radius: 15px; border: none;
+            background: linear-gradient(45deg, var(--sol-green), #0abf70);
+            color: #000; font-weight: 800; font-size: 16px; margin-top: 15px;
+            cursor: pointer;
+        }
+
+
+        
         /* TASKS LIST */
         .task-row {
             display: flex; align-items: center; padding: 15px; margin-bottom: 10px;
