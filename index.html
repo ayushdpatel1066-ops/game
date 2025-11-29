@@ -1,72 +1,319 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tap Master</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Telegram Web App SDK -->
 
-    <script src='//libtl.com/sdk.js' data-zone='10252050' data-sdk='show_10252050'></script>
-    
+    <!-- 1. Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <!-- 2. ADSGRAM SDK -->
+    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+
+    <style>
+        /* CSS STYLES */
+        body {
+            background-color: #000; /* Black Background */
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden; /* Prevent scrolling */
+            user-select: none; /* No text selection */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            padding-bottom: 40px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .user-info {
+            font-size: 14px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        /* Score */
+        .score-board {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .score-board h1 {
+            font-size: 48px;
+            margin: 0;
+            font-weight: 800;
+        }
+        .coin-icon {
+            font-size: 40px;
+        }
+
+        /* The Big Coin */
+        .game-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1; /* Takes up available space */
+        }
+        .coin {
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+            background: radial-gradient(circle at 30% 30%, #ffd700, #ff8c00);
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.4), inset -10px -10px 20px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 100px;
+            transition: transform 0.1s;
+        }
+        .coin:active {
+            transform: scale(0.95);
+        }
+        .coin img {
+            width: 80%;
+            height: 80%;
+            pointer-events: none;
+        }
+
+        /* Ad Button */
+        .ad-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        .boost-btn {
+            background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 90%;
+            box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .boost-btn:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
+        /* Energy Bar */
+        .energy-container {
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .energy-text {
+            font-size: 14px;
+            font-weight: bold;
+            color: #ccc;
+        }
+        .progress-bar {
+            background: #333;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            width: 100%;
+        }
+        .fill {
+            background: linear-gradient(90deg, #f1c40f, #e67e22);
+            height: 100%;
+            width: 100%;
+            transition: width 0.2s ease;
+        }
+
+        /* Floating +1 Animation */
+        .float-text {
+            position: absolute;
+            color: #fff;
+            font-weight: bold;
+            font-size: 28px;
+            pointer-events: none;
+            animation: floatUp 0.8s ease-out forwards;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100px) scale(1.2); opacity: 0; }
+        }
+    </style>
 </head>
 <body>
+
     <div class="container">
+        <!-- Header -->
         <div class="header">
-            <h1>Tap Master</h1>
-            <div class="user-info" id="user-info">Loading...</div>
+            <div class="user-info" id="user-info">Loading Player...</div>
         </div>
 
+        <!-- Score -->
         <div class="score-board">
-            <span class="coin-icon">🪙</span>
-            <h2 id="score">0</h2>
+            <span class="coin-icon">💰</span>
+            <h1 id="score">0</h1>
         </div>
 
+        <!-- The Game Coin -->
         <div class="game-area">
-            <!-- This is the clickable coin -->
             <div class="coin" id="coin">
-                <img src="https://cdn-icons-png.flaticon.com/512/12920/12920501.png" alt="Coin">
+                <!-- Simple Dollar Sign or you can use an <img> tag here -->
+                $
             </div>
         </div>
 
-        <div class="energy-bar">
-            <span>Energy: <span id="energy">100</span>/100</span>
-            <div class="progress">
+        <!-- Ad Button -->
+        <div class="ad-container">
+            <button id="ad-btn" class="boost-btn">
+                📺 Watch Ad (+500 Coins)
+            </button>
+        </div>
+
+        <!-- Energy -->
+        <div class="energy-container">
+            <div class="energy-text">⚡ Energy: <span id="energy">100</span>/100</div>
+            <div class="progress-bar">
                 <div class="fill" id="energy-fill"></div>
             </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
     <script>
+        // --- JAVASCRIPT LOGIC ---
 
-// In-App Interstitial
+        // 1. Init Telegram WebApp
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Make it full screen
 
-show_10252050({
-  type: 'inApp',
-  inAppSettings: {
-    frequency: 2,
-    capping: 0.1,
-    interval: 30,
-    timeout: 5,
-    everyPage: false
-  }
-})
+        // 2. Init Variables
+        let score = Number(localStorage.getItem('score')) || 0;
+        let energy = 100;
+        const maxEnergy = 100;
+        
+        // 3. Get HTML Elements
+        const coinBtn = document.getElementById('coin');
+        const scoreEl = document.getElementById('score');
+        const energyEl = document.getElementById('energy');
+        const energyFill = document.getElementById('energy-fill');
+        const userEl = document.getElementById('user-info');
+        const adBtn = document.getElementById('ad-btn');
 
-/*
-This value is decoded as follows:
-- show automatically 2 ads
-  within 0.1 hours (6 minutes)
-  with a 30-second interval between them
-  and a 5-second delay before the first one is shown.
-  The last digit, 0, means that the session will be saved when you navigate between pages.
-  If you set the last digit as 1, then at any transition between pages,
-  the session will be reset, and the ads will start again.
-*/
+        // 4. Update UI with saved data
+        scoreEl.innerText = score;
+        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+            userEl.innerText = `Player: ${tg.initDataUnsafe.user.first_name}`;
+        } else {
+            userEl.innerText = "Player: Anonymous";
+        }
 
-</script>
+        // --- ADSGRAM CONFIGURATION ---
+        // Initialize with your Block ID: 10252050
+        const AdController = window.Adsgram.init({ blockId: "10252050" });
+
+        adBtn.addEventListener('click', () => {
+            // Show the Ad
+            AdController.show().then((result) => {
+                // User watched the ad successfully
+                score += 500; // Reward
+                energy = maxEnergy; // Refill Energy
+                
+                // Save and Update UI
+                localStorage.setItem('score', score);
+                scoreEl.innerText = score;
+                updateEnergyUI();
+                
+                // Success Feedback
+                tg.showAlert("You earned 500 coins!");
+                tg.HapticFeedback.notificationOccurred('success');
+            }).catch((result) => {
+                // User skipped or error
+                console.log(result);
+                tg.showAlert("Ad skipped or failed. No reward.");
+                tg.HapticFeedback.notificationOccurred('error');
+            });
+        });
+
+
+        // --- GAMEPLAY LOGIC ---
+        
+        // Handle Taps
+        coinBtn.addEventListener('click', (e) => {
+            if (energy > 0) {
+                // Increase Score
+                score++;
+                localStorage.setItem('score', score);
+                scoreEl.innerText = score;
+
+                // Decrease Energy
+                energy--;
+                updateEnergyUI();
+
+                // Visual Effects
+                showFloatText(e.clientX, e.clientY);
+                
+                // Haptic Feedback (Vibration)
+                tg.HapticFeedback.impactOccurred('medium');
+            } else {
+                // No energy
+                tg.HapticFeedback.notificationOccurred('warning');
+            }
+        });
+
+        // Function to update energy bar
+        function updateEnergyUI() {
+            energyEl.innerText = energy;
+            const percentage = (energy / maxEnergy) * 100;
+            energyFill.style.width = percentage + '%';
+        }
+
+        // Function to show floating +1
+        function showFloatText(x, y) {
+            const float = document.createElement('div');
+            float.innerText = '+1';
+            float.className = 'float-text';
+            float.style.left = x + 'px';
+            float.style.top = y + 'px';
+            document.body.appendChild(float);
+            
+            setTimeout(() => {
+                float.remove();
+            }, 800);
+        }
+
+        // Regenerate Energy every second
+        setInterval(() => {
+            if (energy < maxEnergy) {
+                energy++;
+                updateEnergyUI();
+            }
+        }, 1000);
+
+    </script>
 </body>
 </html>
