@@ -3,148 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Tap Master</title>
-
-    <!-- 1. Telegram Web App SDK -->
+    <title>Tap to Earn</title>
+    
+    <!-- TELEGRAM & AD SDKs -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-    <!-- 2. MONETAG AD SDK -->
     <script src="https://libtl.com/sdk.js" data-zone="10252050" data-sdk="show_10252050"></script>
 
     <style>
-        /* --- DESIGN & STYLES --- */
         body {
-            background-color: #121212; /* Dark Mode */
-            color: #ffffff;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .container {
-            flex: 1;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            padding: 20px;
-            padding-bottom: 30px;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
         }
 
-        /* Header */
-        .header { text-align: center; margin-top: 10px; opacity: 0.8; font-size: 14px; }
-
-        /* Score */
-        .score-box { 
-            font-size: 48px; 
-            font-weight: 800; 
-            margin: 10px 0;
-            text-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        /* PROFILE SECTION (Where Username shows) */
+        .profile-card {
+            background: #1a1a1a;
+            width: 90%;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid #333;
         }
+        .avatar {
+            width: 50px; height: 50px;
+            background: #444; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 24px;
+        }
+        .user-details h3 { margin: 0; font-size: 18px; color: #fff; }
+        .user-details p { margin: 0; font-size: 14px; color: #00ccff; }
 
-        /* The Tap Button */
-        .game-area { flex-grow: 1; display: flex; align-items: center; justify-content: center; }
-        .coin {
-            width: 260px; height: 260px;
-            background: radial-gradient(circle at 30% 30%, #ffd700, #ff8c00);
+        /* COIN DISPLAY */
+        .coin-display { margin-top: 30px; text-align: center; }
+        .coin-display h1 { font-size: 50px; margin: 0; }
+        .coin-display span { font-size: 20px; color: #888; }
+
+        /* CLICK BUTTON */
+        .tap-area {
+            flex-grow: 1;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .tap-btn {
+            width: 240px; height: 240px;
+            background: radial-gradient(circle, #f0932b, #b33939);
             border-radius: 50%;
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.4), inset -10px -10px 20px rgba(0,0,0,0.3);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 100px; cursor: pointer; transition: transform 0.1s;
+            border: 5px solid #fff;
+            box-shadow: 0 0 30px #f0932b;
+            cursor: pointer;
+            transition: transform 0.1s;
         }
-        .coin:active { transform: scale(0.95); }
+        .tap-btn:active { transform: scale(0.95); }
 
-        /* Buttons Area */
-        .controls { width: 100%; display: flex; flex-direction: column; gap: 10px; max-width: 350px; }
-        
-        .btn {
-            border: none; padding: 14px; border-radius: 12px;
-            font-size: 16px; font-weight: bold; cursor: pointer;
-            width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px;
-            color: white; transition: opacity 0.2s;
-        }
-        .btn:active { opacity: 0.8; transform: scale(0.98); }
-        
-        .btn-ad { background: linear-gradient(90deg, #00c6ff, #0072ff); box-shadow: 0 4px 15px rgba(0, 114, 255, 0.3); }
-        .btn-rank { background: #333; border: 1px solid #444; }
-
-        /* Leaderboard Modal */
-        .modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 100; flex-direction: column; padding: 20px;
-            box-sizing: border-box;
-        }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .close-btn { font-size: 28px; cursor: pointer; color: #888; }
-        
-        .leaderboard-list { overflow-y: auto; flex: 1; }
-        .user-row {
-            display: flex; justify-content: space-between; padding: 12px;
-            border-bottom: 1px solid #333; font-size: 16px;
-        }
-        .user-row:nth-child(1) { color: #ffd700; font-weight: bold; } /* Gold for #1 */
-        .user-row:nth-child(2) { color: #c0c0c0; } /* Silver for #2 */
-        .user-row:nth-child(3) { color: #cd7f32; } /* Bronze for #3 */
-
-        /* Floating +1 Animation */
-        .float-text {
-            position: absolute; color: #fff; font-weight: bold; font-size: 28px;
-            pointer-events: none; animation: floatUp 0.8s ease-out forwards;
-        }
-        @keyframes floatUp { 
-            0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(-100px); opacity: 0; }
+        /* LOADING SCREEN */
+        #loading {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 999;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 24px;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header" id="user-info">Loading Player...</div>
+    <!-- Loading Screen -->
+    <div id="loading">Logging in...</div>
 
-        <div class="score-box">
-            🪙 <span id="score">0</span>
-        </div>
-
-        <div class="game-area">
-            <div class="coin" id="coin">
-                $
-            </div>
-        </div>
-
-        <div class="controls">
-            <button id="ad-btn" class="btn btn-ad">
-                📺 Watch Ad (+1000 Coins)
-            </button>
-            <button id="lb-btn" class="btn btn-rank">
-                🏆 Leaderboard
-            </button>
+    <!-- User Profile Header -->
+    <div class="profile-card">
+        <div class="avatar">👤</div>
+        <div class="user-details">
+            <h3 id="display-username">Guest</h3>
+            <p>ID: <span id="display-id">...</span></p>
         </div>
     </div>
 
-    <!-- Leaderboard Modal Window -->
-    <div id="lb-modal" class="modal">
-        <div class="modal-header">
-            <h2>🏆 Top Players</h2>
-            <span class="close-btn" id="close-lb">&times;</span>
-        </div>
-        <div id="lb-list" class="leaderboard-list">Loading...</div>
+    <!-- Coin Balance -->
+    <div class="coin-display">
+        <h1 id="score">0</h1>
+        <span>COINS</span>
     </div>
 
-    <!-- JAVASCRIPT LOGIC (Firebase + Game) -->
+    <!-- Tap Button -->
+    <div class="tap-area">
+        <div class="tap-btn" id="tap-btn"></div>
+    </div>
+
+    <!-- Ad Button -->
+    <div style="width:90%; margin-bottom: 20px;">
+        <button id="ad-btn" style="width:100%; padding:15px; background:#007bff; color:white; border:none; border-radius:10px; font-weight:bold;">
+            Watch Ad (+1000 Coins)
+        </button>
+    </div>
+
+    <!-- LOGIC SCRIPT -->
     <script type="module">
-        // 1. IMPORT FIREBASE FUNCTIONS
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, set, get, update, query, orderByChild, limitToLast } 
-        from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // 2. YOUR CONFIGURATION
+        // --- 1. YOUR FIREBASE CONFIG ---
         const firebaseConfig = {
             apiKey: "AIzaSyD339qRMQmBCdB8FETbCK2DOf6oMETeudE",
             authDomain: "zplaybox-6d198.firebaseapp.com",
@@ -156,146 +122,110 @@
             measurementId: "G-XLFK0NVKS8"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-
-        // Initialize Telegram
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        // Game Variables
+        // Variables
         let userId = null;
-        let username = "Guest";
+        let username = "Unknown";
         let score = 0;
-        let unsavedClicks = 0; // Buffer to reduce database writes
 
-        // HTML Elements
+        // UI References
         const scoreEl = document.getElementById('score');
-        const userEl = document.getElementById('user-info');
-        const lbModal = document.getElementById('lb-modal');
-        const lbList = document.getElementById('lb-list');
+        const usernameEl = document.getElementById('display-username');
+        const idEl = document.getElementById('display-id');
+        const loadingEl = document.getElementById('loading');
 
-        // --- STEP A: IDENTIFY USER & LOAD DATA ---
-        if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            userId = tg.initDataUnsafe.user.id.toString();
-            username = tg.initDataUnsafe.user.first_name || "Anon";
-            userEl.innerText = `Player: ${username}`;
+        // --- 2. LOGIN LOGIC (Start App) ---
+        async function startApp() {
+            // Check if running inside Telegram
+            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                
+                // Get Telegram Data
+                const user = tg.initDataUnsafe.user;
+                userId = user.id.toString(); // IMPORTANT: This is the Key
+                username = user.first_name + (user.last_name ? " " + user.last_name : "");
 
-            // Load data from Firebase
-            const userRef = ref(db, 'users/' + userId);
-            get(userRef).then((snapshot) => {
-                if (snapshot.exists()) {
-                    // User exists, load score
-                    score = snapshot.val().score;
-                } else {
-                    // New user, save initial data
-                    set(userRef, { username: username, score: 0 });
-                    score = 0;
+                // Update UI immediately
+                usernameEl.innerText = username;
+                idEl.innerText = userId;
+
+                // Fetch Score from Firebase
+                const userRef = ref(db, 'users/' + userId);
+                try {
+                    const snapshot = await get(userRef);
+                    if (snapshot.exists()) {
+                        // USER EXISTS: Load their score
+                        const data = snapshot.val();
+                        score = data.score || 0;
+                        console.log("Welcome back, " + username);
+                    } else {
+                        // NEW USER: Create account in DB
+                        await set(userRef, {
+                            username: username,
+                            score: 0,
+                            joined: Date.now()
+                        });
+                        score = 0;
+                        console.log("New user created");
+                    }
+                    // Update Score on Screen
+                    scoreEl.innerText = score;
+                } catch (error) {
+                    console.error("Database Error:", error);
+                    alert("Error loading data. Check internet.");
                 }
-                scoreEl.innerText = score;
-            }).catch((err) => {
-                console.error(err);
-                userEl.innerText = "Connection Error";
-            });
 
-        } else {
-            userEl.innerText = "Playing as Guest (Score not saved)";
+            } else {
+                // Not in Telegram (Testing in Browser)
+                usernameEl.innerText = "Browser Tester";
+                idEl.innerText = "000000";
+                alert("Please open this inside Telegram to save progress.");
+            }
+
+            // Hide Loading Screen
+            loadingEl.style.display = 'none';
         }
 
-        // --- STEP B: SAVE LOOP (Sync every 2 seconds) ---
-        setInterval(() => {
-            if (userId && unsavedClicks > 0) {
-                const userRef = ref(db, 'users/' + userId);
-                update(userRef, {
-                    score: score,
-                    username: username // Update name if changed
-                });
-                unsavedClicks = 0; // Reset buffer
-            }
-        }, 2000);
+        // --- 3. TAP LOGIC ---
+        document.getElementById('tap-btn').addEventListener('click', () => {
+            if (!userId) return; // Don't allow taps if not logged in
 
-        // --- STEP C: TAP LOGIC ---
-        document.getElementById('coin').addEventListener('click', (e) => {
             score++;
-            unsavedClicks++;
             scoreEl.innerText = score;
 
-            // Visual Effect
-            const float = document.createElement('div');
-            float.innerText = '+1';
-            float.className = 'float-text';
-            float.style.left = e.clientX + 'px';
-            float.style.top = e.clientY + 'px';
-            document.body.appendChild(float);
-            setTimeout(() => float.remove(), 800);
+            // SAVE to Firebase
+            // To save battery/data, we use debounce or save specifically. 
+            // For simplicity here, we update the DB logic.
+            update(ref(db, 'users/' + userId), {
+                score: score,
+                username: username // Ensure name is always current
+            });
 
-            tg.HapticFeedback.impactOccurred('medium');
+            tg.HapticFeedback.impactOccurred('light');
         });
 
-        // --- STEP D: MONETAG ADS ---
+        // --- 4. AD LOGIC ---
         document.getElementById('ad-btn').addEventListener('click', () => {
-            if (typeof show_10252050 === 'function') {
+             if (typeof show_10252050 === 'function') {
                 show_10252050().then(() => {
-                    // Reward
-                    const reward = 1000;
-                    score += reward;
-                    unsavedClicks += reward; 
+                    score += 1000;
                     scoreEl.innerText = score;
-                    tg.showAlert(`Success! +${reward} Coins`);
-                    
-                    // Force Save Immediately
+                    // Save immediately after ad
                     if(userId) {
                         update(ref(db, 'users/' + userId), { score: score });
-                        unsavedClicks = 0;
                     }
-                }).catch(e => {
-                    tg.showAlert("Ad skipped or failed.");
+                    tg.showAlert("Success! +1000 Coins");
                 });
-            } else {
-                tg.showAlert("Ad system loading... wait 5 seconds.");
-            }
+             } else {
+                 alert("Ad loading...");
+             }
         });
 
-        // --- STEP E: LEADERBOARD ---
-        document.getElementById('lb-btn').addEventListener('click', () => {
-            lbModal.style.display = 'flex';
-            lbList.innerHTML = '<div style="text-align:center; padding:20px;">Loading...</div>';
-
-            // Get Top 20 users
-            const topUsersQuery = query(ref(db, 'users'), orderByChild('score'), limitToLast(20));
-            
-            get(topUsersQuery).then((snapshot) => {
-                lbList.innerHTML = '';
-                const users = [];
-                
-                snapshot.forEach((child) => {
-                    users.push(child.val());
-                });
-
-                // Firebase returns low->high, we reverse to get high->low
-                users.reverse();
-
-                if(users.length === 0) {
-                    lbList.innerHTML = '<div style="text-align:center;">No players yet</div>';
-                    return;
-                }
-
-                users.forEach((u, index) => {
-                    const row = document.createElement('div');
-                    row.className = 'user-row';
-                    row.innerHTML = `
-                        <span>#${index + 1} ${u.username.substring(0, 15)}</span>
-                        <span>${u.score.toLocaleString()}</span>
-                    `;
-                    lbList.appendChild(row);
-                });
-            });
-        });
-
-        document.getElementById('close-lb').addEventListener('click', () => {
-            lbModal.style.display = 'none';
-        });
+        // Run the startup
+        startApp();
 
     </script>
 </body>
