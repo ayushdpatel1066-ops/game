@@ -3,23 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Solana Miner Premium</title>
+    <title>Solana Miner Ultra</title>
 
-    <!-- FONTS -->
+    <!-- FONTS & ICONS -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
     <!-- SDKS -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://libtl.com/sdk.js" data-zone="10252050" data-sdk="show_10252050"></script>
-    <!-- Remix Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
     <style>
         :root {
             --sol-green: #14F195;
             --sol-purple: #9945FF;
-            --bg-dark: #000000;
-            --glass: rgba(20, 20, 20, 0.6);
+            --bg-dark: #050505;
+            --glass: rgba(30, 30, 30, 0.85);
             --border: rgba(255, 255, 255, 0.1);
         }
 
@@ -28,8 +27,8 @@
         body {
             background-color: var(--bg-dark);
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(153, 69, 255, 0.2) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(20, 241, 149, 0.15) 0%, transparent 40%);
+                radial-gradient(circle at 50% -10%, rgba(153, 69, 255, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 50% 110%, rgba(20, 241, 149, 0.2) 0%, transparent 50%);
             color: white;
             font-family: 'Outfit', sans-serif;
             margin: 0; height: 100vh;
@@ -40,179 +39,121 @@
         /* --- UI COMPONENTS --- */
         .glass-panel {
             background: var(--glass);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border);
             border-radius: 20px;
         }
 
         /* HEADER */
-        .header {
-            padding: 20px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .user-badge {
-            display: flex; align-items: center; gap: 10px;
-            font-weight: 700; font-size: 14px;
-        }
-        .avatar {
-            width: 32px; height: 32px;
-            background: linear-gradient(45deg, var(--sol-green), var(--sol-purple));
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-        }
+        .header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 10; }
+        .user-badge { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 14px; }
+        .avatar { width: 32px; height: 32px; background: linear-gradient(45deg, var(--sol-green), var(--sol-purple)); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
-        /* SCREENS (TABS) */
-        .screen {
-            flex: 1; display: none; flex-direction: column;
-            overflow-y: auto; padding: 20px; padding-bottom: 100px;
-        }
+        /* SCREENS */
+        .screen { flex: 1; display: none; flex-direction: column; overflow-y: auto; padding: 20px; padding-bottom: 100px; }
         .screen.active { display: flex; animation: fadeIn 0.3s ease; }
-
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- MINING SCREEN --- */
-        .balance-card {
-            text-align: center; margin-bottom: 30px;
-        }
-        .balance-title { color: #888; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+        /* MINING SCREEN */
+        .balance-card { text-align: center; margin-bottom: 20px; }
         .balance-amount { 
-            font-size: 48px; font-weight: 900; 
-            background: linear-gradient(to right, #fff, #bbb);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-size: 52px; font-weight: 900; line-height: 1;
+            text-shadow: 0 0 20px rgba(153, 69, 255, 0.5);
         }
+        .balance-label { font-size: 14px; color: #888; margin-top: 5px; text-transform: uppercase; letter-spacing: 2px; }
 
-        .miner-area {
-            flex: 1; display: flex; align-items: center; justify-content: center; position: relative;
-        }
+        .miner-area { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; }
         .solana-coin {
-            width: 260px; height: 260px;
-            border-radius: 50%;
-            background: radial-gradient(circle, #1a1a1a, #000);
-            border: 2px solid rgba(153, 69, 255, 0.3);
-            box-shadow: 0 0 60px rgba(153, 69, 255, 0.2);
+            width: 280px; height: 280px; border-radius: 50%;
+            background: radial-gradient(circle, #2a2a2a, #000);
+            border: 4px solid rgba(153, 69, 255, 0.5);
+            box-shadow: 0 0 80px rgba(153, 69, 255, 0.2);
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: transform 0.1s, box-shadow 0.2s;
-            position: relative; z-index: 2;
+            cursor: pointer; transition: transform 0.1s; z-index: 2;
         }
-        .solana-coin img { width: 70%; pointer-events: none; }
-        .solana-coin:active { transform: scale(0.95); box-shadow: 0 0 80px rgba(20, 241, 149, 0.4); }
+        .solana-coin img { width: 75%; pointer-events: none; }
+        .solana-coin:active { transform: scale(0.92); border-color: var(--sol-green); }
 
-        .energy-bar {
-            margin-top: 20px; background: #222; height: 12px; border-radius: 6px; overflow: hidden;
-            position: relative;
+        /* TASKS LIST */
+        .task-row {
+            display: flex; align-items: center; padding: 15px; margin-bottom: 10px;
+            gap: 15px; transition: 0.2s;
         }
-        .energy-fill {
-            height: 100%; width: 100%;
-            background: linear-gradient(90deg, var(--sol-purple), var(--sol-green));
-            transition: width 0.2s;
+        .task-icon { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
+        .task-info { flex: 1; }
+        .task-title { font-weight: bold; font-size: 15px; margin-bottom: 2px; }
+        .task-reward { color: var(--sol-green); font-size: 12px; font-weight: bold; }
+        .btn-task {
+            padding: 8px 16px; border-radius: 20px; border: none; font-weight: bold; font-size: 12px; cursor: pointer;
+            background: white; color: black; min-width: 80px;
         }
+        .btn-task.claimed { background: #333; color: #666; pointer-events: none; }
 
-        /* --- BOOST & ADS SCREEN --- */
-        .section-title { font-size: 20px; font-weight: 700; margin-bottom: 15px; color: var(--sol-green); }
-        
-        .ad-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .ad-card {
-            padding: 15px; display: flex; flex-direction: column; align-items: center; gap: 10px;
-            text-align: center; position: relative; overflow: hidden;
-        }
-        .ad-card h4 { margin: 0; font-size: 14px; }
-        .ad-card p { margin: 0; font-size: 12px; color: #888; }
-        .btn-claim {
-            background: white; color: black; border: none; padding: 8px 16px;
-            border-radius: 8px; font-weight: 700; font-size: 12px; width: 100%; cursor: pointer;
-        }
-        .btn-claim:disabled { background: #333; color: #666; cursor: not-allowed; }
-        
-        .upgrade-row {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px; margin-bottom: 10px;
-        }
+        /* ADS & BOOST */
+        .ad-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .ad-card { padding: 15px; text-align: center; position: relative; }
+        .btn-claim { background: var(--sol-green); color: black; border: none; padding: 8px; border-radius: 8px; width: 100%; font-weight: bold; margin-top: 10px; cursor: pointer; }
+        .btn-claim:disabled { background: #333; color: #666; }
 
-        /* --- WALLET SCREEN --- */
-        .wallet-card {
-            background: linear-gradient(135deg, var(--sol-purple), #5e28a5);
-            padding: 25px; border-radius: 25px; margin-bottom: 25px;
-            box-shadow: 0 10px 30px rgba(153, 69, 255, 0.3);
-        }
-        .live-price { font-size: 12px; opacity: 0.8; margin-top: 10px; display: flex; align-items: center; gap: 5px; }
-        .price-up { color: #8aff8a; }
+        /* LEADERBOARD */
+        .lb-row { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .lb-rank { width: 30px; font-weight: bold; color: #888; }
+        .lb-name { flex: 1; font-weight: 500; }
+        .lb-score { display: flex; align-items: center; gap: 5px; font-weight: bold; color: var(--sol-green); }
 
-        .swap-container { margin-top: 20px; }
-        .swap-box {
-            background: #111; padding: 15px; border-radius: 15px;
-            display: flex; justify-content: space-between; align-items: center;
-            border: 1px solid #333; margin-bottom: 10px;
-        }
-        .swap-icon { width: 30px; height: 30px; border-radius: 50%; margin-right: 10px; }
-        .swap-input { background: transparent; border: none; color: white; font-size: 18px; text-align: right; width: 100px; outline: none; }
-        
-        .btn-action {
-            width: 100%; padding: 18px; border-radius: 15px; border: none;
-            background: linear-gradient(45deg, var(--sol-green), #0abf70);
-            color: #000; font-weight: 800; font-size: 16px; margin-top: 15px;
-            cursor: pointer;
-        }
-
-        /* --- BOTTOM NAV --- */
+        /* BOTTOM NAV */
         .bottom-nav {
-            position: fixed; bottom: 20px; left: 20px; right: 20px;
-            height: 70px; display: flex; justify-content: space-around; align-items: center;
-            z-index: 100;
+            position: fixed; bottom: 20px; left: 20px; right: 20px; height: 75px;
+            display: flex; justify-content: space-between; align-items: center; padding: 0 10px; z-index: 100;
         }
         .nav-item {
-            display: flex; flex-direction: column; align-items: center;
-            color: #666; font-size: 10px; gap: 4px; transition: 0.2s;
-            cursor: pointer;
+            display: flex; flex-direction: column; align-items: center; color: #666;
+            font-size: 10px; gap: 5px; width: 60px; transition: 0.2s; cursor: pointer;
         }
         .nav-item i { font-size: 24px; }
-        .nav-item.active { color: var(--sol-green); transform: translateY(-5px); }
-        .nav-item.active i { text-shadow: 0 0 10px var(--sol-green); }
+        .nav-item.active { color: white; transform: translateY(-5px); }
+        .nav-item.active i { color: var(--sol-green); text-shadow: 0 0 15px var(--sol-green); }
+
+        /* MODALS */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 999; justify-content: center; align-items: center;
+        }
+        .modal-box {
+            background: #151515; width: 85%; max-width: 350px; padding: 30px;
+            border-radius: 25px; text-align: center; border: 1px solid var(--sol-purple);
+            box-shadow: 0 0 50px rgba(153, 69, 255, 0.2);
+        }
 
         /* ANIMATIONS */
         .float-text {
-            position: absolute; color: white; font-weight: 900; font-size: 28px;
+            position: absolute; color: white; font-weight: 900; font-size: 32px;
             pointer-events: none; animation: floatUp 0.8s ease-out forwards;
-            text-shadow: 0 0 10px var(--sol-purple);
+            text-shadow: 0 0 10px var(--sol-green); z-index: 50;
         }
-        @keyframes floatUp { to { transform: translateY(-120px) scale(1.2); opacity: 0; } }
-        
-        /* Modal */
-        .modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); z-index: 200; justify-content: center; align-items: center;
-        }
-        .modal-content {
-            background: #1a1a1a; padding: 30px; border-radius: 25px; text-align: center;
-            width: 80%; border: 1px solid var(--sol-purple);
-        }
+        @keyframes floatUp { to { transform: translateY(-150px) scale(1.2); opacity: 0; } }
+
     </style>
 </head>
 <body>
 
-    <!-- LOADING OVERLAY -->
-    <div id="loader" style="position:fixed; inset:0; background:#000; z-index:999; display:flex; justify-content:center; align-items:center; flex-direction:column;">
-        <img src="https://cryptologos.cc/logos/solana-sol-logo.png" width="80" style="margin-bottom:20px; animation: pulse 2s infinite;">
-        <div style="color:var(--sol-green);">Connecting to Solana...</div>
-    </div>
-
     <!-- HEADER -->
     <div class="header">
         <div class="user-badge glass-panel" style="padding: 8px 12px; border-radius: 30px;">
-            <div class="avatar"><i class="ri-user-fill"></i></div>
-            <span id="username">Guest</span>
+            <div class="avatar"><i class="ri-user-star-fill"></i></div>
+            <span id="username">Loading...</span>
         </div>
-        <div class="glass-panel" style="padding: 8px 12px; border-radius: 30px; font-size: 12px;">
-            <a href="https://t.me/yourchannel" target="_blank" style="color:white; text-decoration:none;">
-                <i class="ri-telegram-fill" style="color:#0088cc;"></i> Join Channel
-            </a>
+        <div class="glass-panel" style="padding: 8px 12px; border-radius: 30px; font-size: 12px; cursor: pointer;" onclick="showLeaderboard()">
+            <i class="ri-trophy-fill" style="color:gold;"></i> Top Players
         </div>
     </div>
 
-    <!-- SCREEN 1: MINING -->
+    <!-- 1. MINE TAB -->
     <div id="screen-mine" class="screen active">
         <div class="balance-card">
-            <div class="balance-title">Current Balance</div>
-            <div class="balance-amount"><span id="score">0</span> SOL-BITS</div>
+            <div class="balance-amount" id="score">0</div>
+            <div class="balance-label">SOL-BITS</div>
         </div>
 
         <div class="miner-area">
@@ -221,112 +162,110 @@
             </div>
         </div>
 
-        <div style="margin-top: auto;">
-            <div style="display:flex; justify-content:space-between; font-size:12px; color:#888;">
-                <span>⚡ Energy</span>
-                <span id="energy-txt">1000/1000</span>
-            </div>
-            <div class="energy-bar">
-                <div class="energy-fill" id="energy-fill"></div>
-            </div>
+        <div style="text-align:center; color:#666; font-size:12px; margin-top: 20px;">
+            <i class="ri-flashlight-fill" style="color:var(--sol-green);"></i>
+            Auto-Miner: <span id="auto-rate">0</span> bits/sec
         </div>
     </div>
 
-    <!-- SCREEN 2: ADS & TASKS -->
+    <!-- 2. TASKS TAB -->
     <div id="screen-tasks" class="screen">
-        <div class="section-title">📺 Watch & Earn (Instant)</div>
-        <p style="font-size:12px; color:#888; margin-bottom:20px;">Watch ads to claim extra SOL-BITS. Timers reset individually.</p>
+        <h2 style="margin-bottom: 5px;">Community Tasks</h2>
+        <p style="font-size:12px; color:#888; margin-bottom: 20px;">Complete tasks to earn huge rewards.</p>
         
-        <div class="ad-grid" id="ad-grid">
-            <!-- Ad Cards Generated via JS -->
+        <div id="task-list">
+            <!-- Tasks injected via JS -->
+            <div style="text-align:center; padding:20px;">Loading tasks...</div>
         </div>
+    </div>
 
-        <div class="section-title" style="margin-top: 30px;">🛠 Mining Equipment</div>
-        <div class="glass-panel upgrade-row">
-            <div>
-                <h4>GPU Overclock</h4>
-                <p>+1 per tap</p>
+    <!-- 3. BOOST TAB (Ads & Equip) -->
+    <div id="screen-boost" class="screen">
+        <h2 style="color:var(--sol-green);">Mining Lab</h2>
+        
+        <!-- Auto Miner -->
+        <div class="glass-panel task-row">
+            <div style="font-size:30px;">🤖</div>
+            <div class="task-info">
+                <div class="task-title">Auto-Bot V1</div>
+                <div style="font-size:11px; color:#888;">Generates 1 coin/sec</div>
             </div>
-            <button class="btn-claim" id="btn-upgrade" style="width: auto; background: var(--sol-purple); color: white;">
-                Upgrade (500)
+            <button class="btn-task" id="buy-bot-btn" style="background:var(--sol-purple); color:white;">
+                Buy (500)
             </button>
         </div>
+
+        <!-- Ad Grid -->
+        <h3 style="margin-top:20px;">Ad Reactor</h3>
+        <p style="font-size:11px; color:#888; margin-bottom:10px;">Watch ads to claim instant SOL-BITS. Timers are separate.</p>
+        <div class="ad-grid" id="ad-grid"></div>
     </div>
 
-    <!-- SCREEN 3: WALLET -->
+    <!-- 4. WALLET TAB -->
     <div id="screen-wallet" class="screen">
-        <div class="wallet-card">
-            <div style="font-size:14px; opacity:0.7;">Total Estimate Value</div>
-            <div style="font-size:32px; font-weight:800;">$<span id="usd-val">0.00</span></div>
-            <div class="live-price">
-                <img src="https://cryptologos.cc/logos/solana-sol-logo.png" width="16">
-                1 SOL = $<span id="sol-price">145.20</span> <span class="price-up">(+2.4%)</span>
-            </div>
+        <div class="glass-panel" style="padding:25px; text-align:center; margin-bottom:20px;">
+            <div style="font-size:14px; color:#aaa;">Estimated Value</div>
+            <div style="font-size:36px; font-weight:bold;">$<span id="usd-val">0.00</span></div>
+            <div style="font-size:12px; color:var(--sol-green); margin-top:5px;">1 SOL ≈ $<span id="sol-price">145.00</span></div>
         </div>
 
-        <div class="section-title">🔄 Swap & Withdraw</div>
-        
-        <div class="swap-container">
-            <!-- From -->
-            <div class="swap-box">
-                <div style="display:flex; align-items:center;">
-                    <div style="width:30px; height:30px; background:radial-gradient(circle,#ffd700,#ff8c00); border-radius:50%; display:flex; justify-content:center; align-items:center; margin-right:10px; font-weight:bold; font-size:10px; color:black;">BIT</div>
-                    <span>SolBits</span>
-                </div>
-                <div id="swap-input" style="font-size:18px;">0</div>
+        <h3 style="margin-bottom:10px;">Swap</h3>
+        <div class="glass-panel" style="padding:15px; display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <div>
+                <div style="font-size:12px; color:#888;">From</div>
+                <div style="font-weight:bold;">SOL-BITS</div>
             </div>
-            
-            <div style="text-align:center; margin:-15px 0;"><i class="ri-arrow-up-down-line" style="background:#222; padding:5px; border-radius:50%;"></i></div>
-
-            <!-- To -->
-            <div class="swap-box">
-                <div style="display:flex; align-items:center;">
-                    <img src="https://cryptologos.cc/logos/solana-sol-logo.png" class="swap-icon">
-                    <span>SOL</span>
-                </div>
-                <span id="swap-output" style="color:var(--sol-green);">0.00</span>
+            <div style="font-size:20px;" id="swap-in">0</div>
+        </div>
+        <div style="text-align:center; margin:-15px 0;"><i class="ri-arrow-down-circle-fill" style="font-size:24px; background:#000; border-radius:50%;"></i></div>
+        <div class="glass-panel" style="padding:15px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <div style="font-size:12px; color:#888;">To</div>
+                <div style="font-weight:bold;">SOLANA</div>
             </div>
+            <div style="font-size:20px; color:var(--sol-green);" id="swap-out">0.00</div>
         </div>
 
-        <button class="btn-action" id="withdraw-btn">Connect Wallet & Withdraw</button>
-
-        <div style="margin-top:20px; text-align:center; font-size:12px; color:#666;">
-            Minimum Withdrawal: 0.5 SOL
-        </div>
+        <button class="btn-claim" style="margin-top:20px; height:50px; font-size:16px;" onclick="alert('Withdrawals open in Phase 2!')">
+            Connect Wallet
+        </button>
     </div>
 
-    <!-- BOTTOM NAV -->
+    <!-- NAV -->
     <div class="bottom-nav glass-panel">
-        <div class="nav-item active" onclick="switchTab('mine', this)">
-            <i class="ri-hammer-fill"></i>
-            <span>Mine</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('tasks', this)">
-            <i class="ri-rocket-2-fill"></i>
-            <span>Boost</span>
-        </div>
-        <div class="nav-item" onclick="switchTab('wallet', this)">
-            <i class="ri-wallet-3-fill"></i>
-            <span>Wallet</span>
+        <div class="nav-item active" onclick="nav('mine', this)"><i class="ri-hammer-fill"></i><span>Mine</span></div>
+        <div class="nav-item" onclick="nav('tasks', this)"><i class="ri-list-check"></i><span>Tasks</span></div>
+        <div class="nav-item" onclick="nav('boost', this)"><i class="ri-rocket-2-fill"></i><span>Boost</span></div>
+        <div class="nav-item" onclick="nav('wallet', this)"><i class="ri-wallet-3-fill"></i><span>Wallet</span></div>
+    </div>
+
+    <!-- MODAL: LEADERBOARD -->
+    <div id="lb-modal" class="modal-overlay">
+        <div class="modal-box" style="width:90%; height:80%; overflow:hidden; display:flex; flex-direction:column;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                <h2 style="margin:0;">🏆 Top Miners</h2>
+                <i class="ri-close-circle-fill" style="font-size:24px;" onclick="closeAllModals()"></i>
+            </div>
+            <div id="lb-list" style="overflow-y:auto; flex:1; text-align:left;">Loading...</div>
         </div>
     </div>
 
-    <!-- SUCCESS MODAL -->
-    <div id="msg-modal" class="modal">
-        <div class="modal-content">
-            <i class="ri-checkbox-circle-fill" style="font-size:50px; color:var(--sol-green);"></i>
-            <h2 id="modal-title">Success</h2>
-            <p id="modal-msg" style="color:#aaa;">Operation completed.</p>
-            <button class="btn-claim" style="margin-top:20px; background:var(--sol-green);" onclick="closeModal()">Awesome</button>
+    <!-- MODAL: 200 LIMIT / AD WATCH -->
+    <div id="limit-modal" class="modal-overlay">
+        <div class="modal-box">
+            <i class="ri-battery-low-fill" style="font-size:50px; color:#ff4757;"></i>
+            <h3>Energy Depleted!</h3>
+            <p style="color:#aaa; font-size:14px;">You have mined 200 coins. Watch an ad to recharge and continue mining.</p>
+            <button class="btn-claim" id="watch-limit-ad">📺 Watch Ad (Resume)</button>
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- SCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, set, get, update, query, orderByChild, limitToLast } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // --- 1. CONFIGURATION ---
+        // --- CONFIG ---
         const firebaseConfig = {
             apiKey: "AIzaSyD339qRMQmBCdB8FETbCK2DOf6oMETeudE",
             authDomain: "zplaybox-6d198.firebaseapp.com",
@@ -337,274 +276,289 @@
             appId: "1:62948869233:web:6f65d78f5a9c8134dc07d0"
         };
 
-        // Ad Slots Configuration (Time in Minutes)
-        const AD_SLOTS = [
-            { id: 0, time: 2, reward: 2 }, // 2 Minutes
-            { id: 1, time: 3, reward: 2 },
-            { id: 2, time: 5, reward: 5 },
-            { id: 3, time: 10, reward: 10 },
-            { id: 4, time: 15, reward: 15 },
-            { id: 5, time: 30, reward: 50 }
-        ];
-
-        // --- 2. INIT SYSTEM ---
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const tg = window.Telegram.WebApp;
         tg.expand();
-        tg.enableClosingConfirmation();
 
-        // Game State
-        let state = {
+        // --- STATE ---
+        let user = {
             id: null,
             username: "Guest",
             score: 0,
-            energy: 1000,
-            maxEnergy: 1000,
-            multitap: 1,
-            adClaims: [0,0,0,0,0,0] // Timestamps of last claims
+            tapCount: 0, // Tracks limit (max 200)
+            autoMiner: 0, // Level
+            adClaims: [0,0,0,0,0,0],
+            completedTasks: []
         };
-        
-        let unsavedChanges = false;
-        let mockSolPrice = 145.20;
+        let tasks = []; // Will hold task list
+        const TAP_LIMIT = 200;
+        const AD_SLOTS = [2, 5, 10, 15, 30, 60]; // Minutes
 
-        // --- 3. CORE LOGIC ---
-        
+        // --- INIT ---
         async function init() {
-            // Check Telegram User
+            // User ID
             if (tg.initDataUnsafe?.user) {
-                state.id = tg.initDataUnsafe.user.id.toString();
-                state.username = tg.initDataUnsafe.user.first_name;
+                user.id = tg.initDataUnsafe.user.id.toString();
+                user.username = tg.initDataUnsafe.user.first_name;
             } else {
-                // Testing Mode
-                state.id = "test_user_premium";
-                state.username = "Dev Tester";
+                user.id = "test_user_ultra"; // Dev mode
+            }
+            document.getElementById('username').innerText = user.username;
+
+            // Load User Data
+            const snap = await get(ref(db, 'sol_users/' + user.id));
+            if (snap.exists()) {
+                const data = snap.val();
+                user.score = data.score || 0;
+                user.tapCount = data.tapCount || 0;
+                user.autoMiner = data.autoMiner || 0;
+                user.adClaims = data.adClaims || user.adClaims;
+                user.completedTasks = data.completedTasks || [];
+            } else {
+                saveUser(); // Create new
             }
 
-            document.getElementById('username').innerText = state.username;
+            // Load Tasks (Remote or Default)
+            loadTasks();
 
-            // Load Data
-            const userRef = ref(db, 'sol_users/' + state.id);
-            const snapshot = await get(userRef);
-
-            if (snapshot.exists()) {
-                const data = snapshot.val();
-                state.score = data.score || 0;
-                state.energy = data.energy || 1000;
-                state.multitap = data.multitap || 1;
-                state.adClaims = data.adClaims || [0,0,0,0,0,0];
-            } else {
-                // New User
-                updateDB();
-            }
-
-            document.getElementById('loader').style.display = 'none';
+            // Render UI
             updateUI();
-            startTimers();
+            renderAds();
+            
+            // Start loops
+            setInterval(saveUser, 5000); // Auto save
+            setInterval(autoMine, 1000); // Auto miner
+            setInterval(checkAdTimers, 1000); // Ad timers
         }
 
-        function updateDB() {
-            if(!state.id) return;
-            update(ref(db, 'sol_users/' + state.id), state);
-            unsavedChanges = false;
+        // --- CORE LOGIC ---
+        function saveUser() {
+            if(user.id) update(ref(db, 'sol_users/' + user.id), user);
         }
 
-        // --- 4. GAMEPLAY ---
+        function updateUI() {
+            document.getElementById('score').innerText = Math.floor(user.score).toLocaleString();
+            document.getElementById('auto-rate').innerText = user.autoMiner;
+            
+            // Wallet UI
+            const solVal = user.score / 10000;
+            document.getElementById('swap-in').innerText = Math.floor(user.score).toLocaleString();
+            document.getElementById('swap-out').innerText = solVal.toFixed(4);
+            document.getElementById('usd-val').innerText = (solVal * 145).toFixed(2);
+        }
 
-        // Tap Handler
+        // --- MINING & LIMIT ---
         document.getElementById('tap-btn').addEventListener('click', (e) => {
-            if (state.energy >= state.multitap) {
-                // Logic
-                state.score += state.multitap;
-                state.energy -= state.multitap;
-                
-                // UI
-                document.getElementById('score').innerText = state.score.toLocaleString();
-                updateEnergyUI();
-                
-                // Effects
-                showFloatText(e.clientX, e.clientY, `+${state.multitap}`);
-                tg.HapticFeedback.impactOccurred('medium');
-                
-                // Sync Trigger
-                unsavedChanges = true;
+            // Check Limit
+            if (user.tapCount >= TAP_LIMIT) {
+                document.getElementById('limit-modal').style.display = 'flex';
+                return;
+            }
+
+            user.score++;
+            user.tapCount++;
+            updateUI();
+
+            // Animation
+            const fl = document.createElement('div');
+            fl.className = 'float-text';
+            fl.innerText = '+1';
+            fl.style.left = e.clientX + 'px'; fl.style.top = e.clientY + 'px';
+            document.body.appendChild(fl);
+            setTimeout(()=>fl.remove(), 800);
+            tg.HapticFeedback.impactOccurred('light');
+        });
+
+        // Watch Ad to Reset Limit
+        document.getElementById('watch-limit-ad').addEventListener('click', () => {
+            showAd().then(() => {
+                user.tapCount = 0; // Reset limit
+                saveUser();
+                document.getElementById('limit-modal').style.display = 'none';
+                tg.showAlert("Energy Restored! Keep mining.");
+            });
+        });
+
+        // Auto Miner
+        function autoMine() {
+            if (user.autoMiner > 0) {
+                user.score += user.autoMiner;
+                updateUI();
+            }
+        }
+
+        document.getElementById('buy-bot-btn').addEventListener('click', () => {
+            if (user.score >= 500) {
+                user.score -= 500;
+                user.autoMiner++;
+                saveUser();
+                updateUI();
+                tg.showAlert("Auto-Bot Upgraded!");
             } else {
-                tg.HapticFeedback.notificationOccurred('error');
+                tg.showAlert("Not enough coins!");
             }
         });
 
-        // Energy Regen
-        setInterval(() => {
-            if (state.energy < state.maxEnergy) {
-                state.energy += 1;
-                updateEnergyUI();
-            }
-        }, 1000);
+        // --- TASKS SYSTEM ---
+        async function loadTasks() {
+            // Try fetch from DB 'system/tasks', else use default
+            const defTasks = [
+                { id: 1, title: "Join Telegram Channel", reward: 100, url: "https://t.me/telegram", img: "https://cdn-icons-png.flaticon.com/512/2111/2111646.png" },
+                { id: 2, title: "Follow on Twitter", reward: 100, url: "https://twitter.com", img: "https://cdn-icons-png.flaticon.com/512/733/733579.png" },
+                { id: 3, title: "Visit Website", reward: 100, url: "https://google.com", img: "https://cdn-icons-png.flaticon.com/512/1006/1006771.png" },
+                { id: 4, title: "Invite a Friend", reward: 100, url: "https://t.me/share/url?url=Play", img: "https://cdn-icons-png.flaticon.com/512/1256/1256661.png" },
+                { id: 5, title: "Subscribe YouTube", reward: 100, url: "https://youtube.com", img: "https://cdn-icons-png.flaticon.com/512/1384/1384060.png" }
+            ];
+            
+            // Try DB (Optional: You can add code to fetch from DB here)
+            tasks = defTasks; 
+            renderTasks();
+        }
 
-        // Auto Save Loop (Every 3s)
-        setInterval(() => {
-            if (unsavedChanges) updateDB();
-        }, 3000);
+        function renderTasks() {
+            const list = document.getElementById('task-list');
+            list.innerHTML = '';
+            
+            tasks.forEach(t => {
+                const isClaimed = user.completedTasks.includes(t.id);
+                const btnState = isClaimed ? 'claimed' : '';
+                const btnText = isClaimed ? 'Done' : 'Start';
+                
+                const div = document.createElement('div');
+                div.className = 'glass-panel task-row';
+                div.innerHTML = `
+                    <img src="${t.img}" class="task-icon">
+                    <div class="task-info">
+                        <div class="task-title">${t.title}</div>
+                        <div class="task-reward">+${t.reward} SOL-BITS</div>
+                    </div>
+                    <button class="btn-task ${btnState}" onclick="handleTask(${t.id}, '${t.url}', ${t.reward})">
+                        ${btnText}
+                    </button>
+                `;
+                list.appendChild(div);
+            });
+        }
 
-        // --- 5. AD SYSTEM (COMPLEX) ---
-        
+        window.handleTask = (id, url, reward) => {
+            if (user.completedTasks.includes(id)) return;
+            
+            // Open Link
+            window.open(url, '_blank');
+            
+            // Simulate verification time (In real app, use bot API)
+            setTimeout(() => {
+                if (confirm(`Did you complete the task for ${reward} coins?`)) {
+                    user.score += reward;
+                    user.completedTasks.push(id);
+                    saveUser();
+                    renderTasks();
+                    updateUI();
+                    tg.HapticFeedback.notificationOccurred('success');
+                }
+            }, 3000);
+        };
+
+        // --- AD SYSTEM ---
         function renderAds() {
             const grid = document.getElementById('ad-grid');
-            grid.innerHTML = '';
-
-            AD_SLOTS.forEach((slot, index) => {
+            AD_SLOTS.forEach((min, idx) => {
                 const div = document.createElement('div');
                 div.className = 'glass-panel ad-card';
                 div.innerHTML = `
-                    <div style="font-size:24px;">📺</div>
-                    <h4>Slot #${index + 1}</h4>
-                    <p>Reward: ${slot.reward} Bits</p>
-                    <button id="btn-ad-${index}" class="btn-claim" onclick="window.claimAd(${index})">
-                        Claim
-                    </button>
+                    <div style="font-size:20px; margin-bottom:5px;">📺</div>
+                    <div style="font-size:12px; color:#888;">Wait: ${min}m</div>
+                    <div style="font-weight:bold; color:var(--sol-green);">+${min*5} Bits</div>
+                    <button id="ad-btn-${idx}" class="btn-claim" onclick="claimAdSlot(${idx}, ${min})">Watch</button>
                 `;
                 grid.appendChild(div);
             });
-            checkAdTimers();
         }
-
-        window.claimAd = (index) => {
-            if (typeof show_10252050 === 'function') {
-                show_10252050().then(() => {
-                    // Success
-                    const reward = AD_SLOTS[index].reward;
-                    state.score += reward;
-                    state.adClaims[index] = Date.now(); // Set timestamp
-                    
-                    updateUI();
-                    updateDB();
-                    checkAdTimers(); // Refresh buttons
-                    
-                    showModal('Reward Claimed', `You received ${reward} SOL-BITS!`);
-                }).catch(e => {
-                     showModal('Error', 'Ad was skipped or failed to load.');
-                });
-            } else {
-                showModal('System', 'Ad Network Loading...');
-            }
-        };
 
         function checkAdTimers() {
             const now = Date.now();
-            AD_SLOTS.forEach((slot, index) => {
-                const btn = document.getElementById(`btn-ad-${index}`);
-                if(!btn) return;
-
-                const lastClaim = state.adClaims[index] || 0;
-                const cooldownMS = slot.time * 60 * 1000;
-                const diff = now - lastClaim;
-
-                if (diff < cooldownMS) {
-                    // Cooldown active
-                    const remaining = Math.ceil((cooldownMS - diff) / 1000);
-                    const mins = Math.floor(remaining / 60);
-                    const secs = remaining % 60;
+            AD_SLOTS.forEach((min, idx) => {
+                const last = user.adClaims[idx];
+                const cd = min * 60 * 1000;
+                const diff = now - last;
+                const btn = document.getElementById(`ad-btn-${idx}`);
+                
+                if (diff < cd) {
+                    const left = Math.ceil((cd - diff)/1000);
                     btn.disabled = true;
-                    btn.innerText = `${mins}:${secs < 10 ? '0'+secs : secs}`;
+                    btn.innerText = `${Math.floor(left/60)}:${(left%60).toString().padStart(2,'0')}`;
                 } else {
-                    // Ready
                     btn.disabled = false;
-                    btn.innerText = "WATCH AD";
-                    btn.style.background = "var(--sol-green)";
+                    btn.innerText = "CLAIM";
                 }
             });
         }
 
-        function startTimers() {
-            renderAds();
-            setInterval(checkAdTimers, 1000); // Update timers every second
-            
-            // Live Price Simulation
-            setInterval(() => {
-                const change = (Math.random() - 0.5) * 0.5;
-                mockSolPrice += change;
-                document.getElementById('sol-price').innerText = mockSolPrice.toFixed(2);
-                updateWalletUI();
-            }, 5000);
-        }
-
-        // --- 6. WALLET LOGIC ---
-
-        function updateWalletUI() {
-            // 10,000 Bits = 1 SOL (Example Rate)
-            const conversionRate = 10000;
-            const solValue = state.score / conversionRate;
-            const usdValue = solValue * mockSolPrice;
-
-            document.getElementById('usd-val').innerText = usdValue.toFixed(2);
-            document.getElementById('swap-input').innerText = state.score.toLocaleString();
-            document.getElementById('swap-output').innerText = solValue.toFixed(4);
-        }
-
-        document.getElementById('withdraw-btn').addEventListener('click', () => {
-             const solValue = state.score / 10000;
-             if(solValue < 0.5) {
-                 showModal('Withdraw Failed', 'Minimum withdrawal is 0.5 SOL. Keep mining!');
-             } else {
-                 showModal('Connect Wallet', 'This feature is in Demo Mode. Real withdrawals coming soon!');
-             }
-        });
-
-        document.getElementById('btn-upgrade').addEventListener('click', () => {
-            const cost = 500;
-            if (state.score >= cost) {
-                state.score -= cost;
-                state.multitap += 1;
-                updateDB();
+        window.claimAdSlot = (idx, min) => {
+            showAd().then(() => {
+                user.score += (min * 5); // Reward based on wait time
+                user.adClaims[idx] = Date.now();
+                saveUser();
                 updateUI();
-                showModal('Upgraded!', 'Multitap level increased.');
-            } else {
-                showModal('Failed', 'Not enough coins!');
-            }
-        });
+                checkAdTimers();
+                tg.showAlert(`Claimed ${min*5} Coins!`);
+            });
+        };
 
-        // --- 7. HELPER FUNCTIONS ---
-
-        function updateUI() {
-            document.getElementById('score').innerText = state.score.toLocaleString();
-            updateEnergyUI();
-            updateWalletUI();
+        function showAd() {
+            return new Promise((resolve, reject) => {
+                if (typeof show_10252050 === 'function') {
+                    show_10252050().then(() => resolve()).catch(() => reject());
+                } else {
+                    // Fallback for testing
+                    tg.showAlert("Ad loading... (Simulated)");
+                    setTimeout(resolve, 1000);
+                }
+            });
         }
 
-        function updateEnergyUI() {
-            document.getElementById('energy-txt').innerText = `${state.energy}/${state.maxEnergy}`;
-            document.getElementById('energy-fill').style.width = `${(state.energy/state.maxEnergy)*100}%`;
-        }
+        // --- LEADERBOARD ---
+        window.showLeaderboard = async () => {
+            document.getElementById('lb-modal').style.display = 'flex';
+            const list = document.getElementById('lb-list');
+            list.innerHTML = 'Loading...';
+            
+            const q = query(ref(db, 'sol_users'), orderByChild('score'), limitToLast(20));
+            const snap = await get(q);
+            
+            list.innerHTML = '';
+            const arr = [];
+            snap.forEach(c => arr.push(c.val()));
+            arr.reverse(); // Highest first
+            
+            arr.forEach((u, i) => {
+                const div = document.createElement('div');
+                div.className = 'lb-row';
+                div.innerHTML = `
+                    <div class="lb-rank">#${i+1}</div>
+                    <div class="lb-name">${u.username.substring(0, 15)}</div>
+                    <div class="lb-score">
+                        <img src="https://cryptologos.cc/logos/solana-sol-logo.png" width="12">
+                        ${Math.floor(u.score).toLocaleString()}
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        };
 
-        function showFloatText(x, y, text) {
-            const el = document.createElement('div');
-            el.className = 'float-text';
-            el.innerText = text;
-            el.style.left = x + 'px';
-            el.style.top = y + 'px';
-            document.body.appendChild(el);
-            setTimeout(() => el.remove(), 800);
-        }
-        
-        // Tab Switcher
-        window.switchTab = (tabName, el) => {
+        window.closeAllModals = () => {
+            document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
+        };
+
+        // --- NAV ---
+        window.nav = (screen, el) => {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            
-            document.getElementById('screen-' + tabName).classList.add('active');
+            document.getElementById('screen-'+screen).classList.add('active');
             el.classList.add('active');
             tg.HapticFeedback.selectionChanged();
         };
-
-        // Modal Helpers
-        window.showModal = (title, msg) => {
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-msg').innerText = msg;
-            document.getElementById('msg-modal').style.display = 'flex';
-        }
-        window.closeModal = () => {
-            document.getElementById('msg-modal').style.display = 'none';
-        }
 
         // Start
         init();
