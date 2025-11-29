@@ -8,14 +8,14 @@
     <!-- 1. Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-    <!-- 2. ADSGRAM SDK -->
-    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+    <!-- 2. MONETAG AD SDK (Your specific tag) -->
+    <!-- Note: Added 'https:' to ensure it loads securely in Telegram -->
+    <script src="https://libtl.com/sdk.js" data-zone="10252050" data-sdk="show_10252050"></script>
 
-    <script src='//libtl.com/sdk.js' data-zone='10252050' data-sdk='show_10252050'></script>
     <style>
-        /* CSS STYLES */
+        /* --- CSS STYLES --- */
         body {
-            background-color: #000; /* Black Background */
+            background-color: #111; /* Dark background */
             color: #fff;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
@@ -23,8 +23,8 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
-            overflow: hidden; /* Prevent scrolling */
-            user-select: none; /* No text selection */
+            overflow: hidden;
+            user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -35,65 +35,60 @@
             align-items: center;
             justify-content: space-between;
             padding: 20px;
-            padding-bottom: 40px;
+            padding-bottom: 30px;
         }
 
         /* Header */
         .header {
-            text-align: center;
             margin-top: 10px;
+            text-align: center;
         }
-        .user-info {
+        .user-name {
+            color: #aaa;
             font-size: 14px;
-            color: #888;
             margin-top: 5px;
         }
 
-        /* Score */
-        .score-board {
+        /* Score Display */
+        .score-box {
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 10px;
-            margin-bottom: 20px;
+            margin: 10px 0;
         }
-        .score-board h1 {
-            font-size: 48px;
+        .score-box h1 {
+            font-size: 42px;
             margin: 0;
-            font-weight: 800;
-        }
-        .coin-icon {
-            font-size: 40px;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
-        /* The Big Coin */
+        /* The Coin (Clickable) */
         .game-area {
+            flex-grow: 1;
             display: flex;
-            justify-content: center;
             align-items: center;
-            flex-grow: 1; /* Takes up available space */
+            justify-content: center;
         }
         .coin {
-            width: 260px;
-            height: 260px;
-            border-radius: 50%;
-            cursor: pointer;
-            position: relative;
+            width: 250px;
+            height: 250px;
             background: radial-gradient(circle at 30% 30%, #ffd700, #ff8c00);
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.4), inset -10px -10px 20px rgba(0,0,0,0.3);
+            border-radius: 50%;
+            box-shadow: 0 0 50px rgba(255, 140, 0, 0.4), inset -10px -10px 20px rgba(0,0,0,0.3);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 100px;
+            cursor: pointer;
             transition: transform 0.1s;
+            position: relative;
         }
         .coin:active {
-            transform: scale(0.95);
+            transform: scale(0.94);
         }
-        .coin img {
-            width: 80%;
-            height: 80%;
-            pointer-events: none;
+        .coin span {
+            pointer-events: none; /* Prevents text selection on click */
         }
 
         /* Ad Button */
@@ -104,100 +99,87 @@
             margin-bottom: 15px;
         }
         .boost-btn {
-            background: linear-gradient(90deg, #3a7bd5, #00d2ff);
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
             color: white;
             border: none;
-            padding: 14px 28px;
+            padding: 14px 24px;
             border-radius: 12px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             width: 90%;
-            box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0, 114, 255, 0.4);
+            transition: opacity 0.2s;
         }
         .boost-btn:active {
-            transform: scale(0.98);
-            opacity: 0.9;
+            opacity: 0.8;
         }
 
         /* Energy Bar */
-        .energy-container {
+        .energy-box {
             width: 90%;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
         }
         .energy-text {
             font-size: 14px;
-            font-weight: bold;
             color: #ccc;
+            margin-bottom: 5px;
         }
         .progress-bar {
-            background: #333;
-            height: 12px;
-            border-radius: 6px;
-            overflow: hidden;
             width: 100%;
+            height: 10px;
+            background: #333;
+            border-radius: 5px;
+            overflow: hidden;
         }
         .fill {
-            background: linear-gradient(90deg, #f1c40f, #e67e22);
-            height: 100%;
             width: 100%;
-            transition: width 0.2s ease;
+            height: 100%;
+            background: linear-gradient(90deg, #f1c40f, #e67e22);
+            transition: width 0.2s linear;
         }
 
-        /* Floating +1 Animation */
+        /* Floating Text Animation */
         .float-text {
             position: absolute;
-            color: #fff;
+            color: white;
             font-weight: bold;
-            font-size: 28px;
+            font-size: 24px;
             pointer-events: none;
             animation: floatUp 0.8s ease-out forwards;
-            text-shadow: 0 0 5px rgba(0,0,0,0.5);
         }
-
         @keyframes floatUp {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-100px) scale(1.2); opacity: 0; }
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-80px); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Header -->
         <div class="header">
-            <div class="user-info" id="user-info">Loading Player...</div>
+            <h3>TAP MASTER</h3>
+            <div class="user-name" id="user-info">Loading...</div>
         </div>
 
-        <!-- Score -->
-        <div class="score-board">
-            <span class="coin-icon">💰</span>
+        <div class="score-box">
+            <span>🪙</span>
             <h1 id="score">0</h1>
         </div>
 
-        <!-- The Game Coin -->
         <div class="game-area">
             <div class="coin" id="coin">
-                <!-- Simple Dollar Sign or you can use an <img> tag here -->
-                $
+                <span>$</span>
             </div>
         </div>
 
         <!-- Ad Button -->
         <div class="ad-container">
             <button id="ad-btn" class="boost-btn">
-                📺 Watch Ad (+500 Coins)
+                📺 Watch Ad (+1000 Coins)
             </button>
         </div>
 
-        <!-- Energy -->
-        <div class="energy-container">
+        <div class="energy-box">
             <div class="energy-text">⚡ Energy: <span id="energy">100</span>/100</div>
             <div class="progress-bar">
                 <div class="fill" id="energy-fill"></div>
@@ -208,92 +190,91 @@
     <script>
         // --- JAVASCRIPT LOGIC ---
 
-        // 1. Init Telegram WebApp
+        // 1. Initialize Telegram
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Make it full screen
+        tg.expand();
 
-        // 2. Init Variables
+        // 2. Variables
         let score = Number(localStorage.getItem('score')) || 0;
         let energy = 100;
         const maxEnergy = 100;
         
-        // 3. Get HTML Elements
-        const coinBtn = document.getElementById('coin');
+        // 3. UI Elements
         const scoreEl = document.getElementById('score');
+        const coinEl = document.getElementById('coin');
         const energyEl = document.getElementById('energy');
         const energyFill = document.getElementById('energy-fill');
-        const userEl = document.getElementById('user-info');
         const adBtn = document.getElementById('ad-btn');
+        const userEl = document.getElementById('user-info');
 
-        // 4. Update UI with saved data
+        // 4. Set Initial State
         scoreEl.innerText = score;
         if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
-            userEl.innerText = `Player: ${tg.initDataUnsafe.user.first_name}`;
+            userEl.innerText = tg.initDataUnsafe.user.first_name;
         } else {
-            userEl.innerText = "Player: Anonymous";
+            userEl.innerText = "Anonymous Player";
         }
 
-        // --- ADSGRAM CONFIGURATION ---
-        // Initialize with your Block ID: 10252050
-        const AdController = window.Adsgram.init({ blockId: "10252050" });
-
+        // ==========================================
+        // === MONETAG AD LOGIC START ===
+        // ==========================================
+        
         adBtn.addEventListener('click', () => {
-            // Show the Ad
-            AdController.show().then((result) => {
-                // User watched the ad successfully
-                score += 500; // Reward
-                energy = maxEnergy; // Refill Energy
+            // Check if the Monetag function is loaded
+            if (typeof show_10252050 === 'function') {
                 
-                // Save and Update UI
-                localStorage.setItem('score', score);
-                scoreEl.innerText = score;
-                updateEnergyUI();
-                
-                // Success Feedback
-                tg.showAlert("You earned 500 coins!");
-                tg.HapticFeedback.notificationOccurred('success');
-            }).catch((result) => {
-                // User skipped or error
-                console.log(result);
-                tg.showAlert("Ad skipped or failed. No reward.");
-                tg.HapticFeedback.notificationOccurred('error');
-            });
+                // Call the function provided by Monetag
+                show_10252050().then(() => {
+                    // --- REWARD USER HERE ---
+                    score += 1000;
+                    energy = maxEnergy;
+                    
+                    // Save and Update
+                    localStorage.setItem('score', score);
+                    scoreEl.innerText = score;
+                    updateEnergyUI();
+                    
+                    // Alert User
+                    tg.showAlert("Success! +1000 Coins added.");
+                });
+
+            } else {
+                tg.showAlert("Ad is loading... please try again in a few seconds.");
+            }
         });
 
+        // ==========================================
+        // === MONETAG AD LOGIC END ===
+        // ==========================================
 
-        // --- GAMEPLAY LOGIC ---
-        
-        // Handle Taps
-        coinBtn.addEventListener('click', (e) => {
+
+        // 5. Tap Logic
+        coinEl.addEventListener('click', (e) => {
             if (energy > 0) {
-                // Increase Score
+                // Add Score
                 score++;
                 localStorage.setItem('score', score);
                 scoreEl.innerText = score;
 
-                // Decrease Energy
+                // Remove Energy
                 energy--;
                 updateEnergyUI();
 
-                // Visual Effects
-                showFloatText(e.clientX, e.clientY);
-                
-                // Haptic Feedback (Vibration)
+                // Haptic & Visuals
                 tg.HapticFeedback.impactOccurred('medium');
+                showFloatText(e.clientX, e.clientY);
             } else {
-                // No energy
                 tg.HapticFeedback.notificationOccurred('warning');
             }
         });
 
-        // Function to update energy bar
+        // 6. Helpers
         function updateEnergyUI() {
             energyEl.innerText = energy;
-            const percentage = (energy / maxEnergy) * 100;
-            energyFill.style.width = percentage + '%';
+            const pct = (energy / maxEnergy) * 100;
+            energyFill.style.width = pct + '%';
         }
 
-        // Function to show floating +1
         function showFloatText(x, y) {
             const float = document.createElement('div');
             float.innerText = '+1';
@@ -301,13 +282,10 @@
             float.style.left = x + 'px';
             float.style.top = y + 'px';
             document.body.appendChild(float);
-            
-            setTimeout(() => {
-                float.remove();
-            }, 800);
+            setTimeout(() => float.remove(), 800);
         }
 
-        // Regenerate Energy every second
+        // 7. Energy Regeneration
         setInterval(() => {
             if (energy < maxEnergy) {
                 energy++;
