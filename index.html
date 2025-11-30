@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
+     
  
           <script src="https://richinfo.co/richpartners/telegram/js/tg-ob.js"></script>
           <script>
@@ -18,7 +20,7 @@
               appId: "4828",
             });
           </script>
-    
+
     <style>
         :root {
             --sol-green: #14F195;
@@ -74,51 +76,56 @@
         .screen.active { display: flex; animation: fadeUp 0.3s ease; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- MINE SCREEN (UPDATED) --- */
-        .balance-card { text-align: center; margin-bottom: 15px; margin-top: 5px; }
+        /* --- MINE SCREEN --- */
+        .balance-card { text-align: center; margin-bottom: 10px; margin-top: 5px; }
         .balance-val { 
             font-size: 56px; font-weight: 900; line-height: 1;
             background: linear-gradient(to bottom, #fff, #bbb);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             font-family: var(--font-main);
         }
-        .balance-lbl { font-size: 13px; letter-spacing: 2px; color: #888; text-transform: uppercase; margin-top: 5px; }
-        
         .real-sol-disp {
             font-size: 14px; color: var(--sol-green); font-weight: bold;
             background: rgba(20, 241, 149, 0.1); border: 1px solid rgba(20, 241, 149, 0.3);
             display: inline-block; padding: 4px 12px; border-radius: 12px; margin-top: 8px;
         }
         
-        /* Floating Telegram Button */
-        .tg-float {
-            position: absolute; top: 10px; right: 0;
-            background: rgba(40, 168, 233, 0.2); 
-            border: 1px solid rgba(40, 168, 233, 0.5);
-            padding: 8px 14px; border-radius: 50px;
-            display: flex; align-items: center; gap: 6px;
-            font-size: 11px; font-weight: bold; color: white;
-            cursor: pointer; z-index: 20; backdrop-filter: blur(5px);
+        /* MINI BONUS BUTTON */
+        .mini-bonus-box {
+            position: absolute; top: 0; right: 0; z-index: 20;
+            display: flex; flex-direction: column; align-items: flex-end;
         }
-        
+        .mini-btn {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            border: 1px solid #FFF; box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+            color: black; font-weight: 800; font-size: 11px;
+            padding: 8px 12px; border-radius: 20px; cursor: pointer;
+            display: flex; align-items: center; gap: 5px; transition: 0.2s;
+        }
+        .mini-btn:active { transform: scale(0.95); }
+        .mini-btn.locked { background: #333; border-color: #555; color: #888; pointer-events: none; box-shadow: none; }
+
         /* Coin & Animation */
         .miner-area { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; width: 100%; flex-direction: column; }
+        
+        /* UPDATED COIN SIZE */
         .solana-coin {
-            width: 270px; height: 270px; border-radius: 50%;
+            width: 210px; height: 210px; border-radius: 50%;
             background: radial-gradient(circle, #1a1a1a, #000);
-            border: 4px solid rgba(153, 69, 255, 0.3);
-            box-shadow: 0 0 80px rgba(153, 69, 255, 0.2);
+            border: 5px solid rgba(153, 69, 255, 0.4);
+            box-shadow: 0 0 100px rgba(153, 69, 255, 0.25);
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; position: relative; z-index: 5;
-            transition: transform 0.1s;
+            transition: transform 0.05s, box-shadow 0.1s;
         }
-        .solana-coin:active { transform: scale(0.96); }
+        .solana-coin:active { 
+            transform: scale(0.94); 
+            box-shadow: 0 0 40px rgba(153, 69, 255, 0.5);
+            border-color: var(--sol-green);
+        }
         .solana-coin img { width: 75%; pointer-events: none; }
         
-        /* Ripple Animation Class */
-        .ripple {
-            animation: pulse-ring 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
-        }
+        .ripple { animation: pulse-ring 0.4s cubic-bezier(0.215, 0.61, 0.355, 1); }
         @keyframes pulse-ring {
             0% { box-shadow: 0 0 0 0 rgba(20, 241, 149, 0.5); }
             70% { box-shadow: 0 0 0 40px rgba(20, 241, 149, 0); }
@@ -134,6 +141,12 @@
             background: linear-gradient(90deg, var(--sol-purple), var(--sol-green));
             transition: width 0.3s ease;
         }
+        
+        .auto-mining-active {
+            color: var(--sol-green);
+            animation: pulseText 2s infinite;
+        }
+        @keyframes pulseText { 0% { opacity: 0.7; } 50% { opacity: 1; } 100% { opacity: 0.7; } }
 
         /* --- WALLET SCREEN --- */
         .wallet-card {
@@ -155,10 +168,18 @@
         }
         .swap-icon { width: 30px; height: 30px; border-radius: 50%; margin-right: 8px; object-fit: contain; }
         .swap-input { background: transparent; border: none; color: white; font-size: 20px; font-weight: bold; text-align: right; width: 150px; outline: none; font-family: var(--font-main); }
+        
+        .tg-wallet-btn {
+            width: 100%; padding: 14px; border-radius: 15px; border: none;
+            background: rgba(40, 168, 233, 0.15); border: 1px solid rgba(40, 168, 233, 0.4);
+            color: #28a8e9; font-weight: 700; font-size: 14px; margin-top: 25px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+
         .btn-action {
             width: 100%; padding: 18px; border-radius: 15px; border: none;
             background: linear-gradient(45deg, var(--sol-green), #0abf70);
-            color: #000; font-weight: 800; font-size: 16px; margin-top: 15px;
+            color: #000; font-weight: 800; font-size: 16px; margin-top: 10px;
             cursor: pointer;
         }
 
@@ -169,7 +190,6 @@
             background: white; color: black; border: none; padding: 8px 16px;
             border-radius: 20px; font-weight: 700; font-size: 12px; cursor: pointer; min-width: 80px;
         }
-        /* Style for completed tasks (Green border, clickable to visit) */
         .task-btn.done { 
             background: transparent; border: 1px solid var(--sol-green); color: var(--sol-green);
         }
@@ -180,6 +200,8 @@
         
         /* --- LEADERBOARD & MODALS --- */
         .lb-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .my-rank-row { background: rgba(20, 241, 149, 0.1); border: 1px solid var(--sol-green); border-radius: 10px; margin-bottom: 10px; }
+        
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 999; justify-content: center; align-items: center; }
         .modal-box { background: #181818; width: 90%; max-width: 360px; padding: 30px; border-radius: 30px; text-align: center; border: 1px solid var(--sol-purple); animation: popIn 0.3s; }
         @keyframes popIn { from { transform: scale(0.8); } to { transform: scale(1); } }
@@ -216,14 +238,16 @@
     <div id="screen-mine" class="screen active">
         <div class="balance-card">
             <div class="balance-val" id="score">0</div>
-            <!-- NEW SOLANA DISPLAY -->
             <div class="real-sol-disp">≈ <span id="real-sol">0.0000</span> SOL</div>
         </div>
 
         <div class="miner-area">
-            <!-- FLOATING TELEGRAM BUTTON (UPDATED ICON) -->
-            <div class="tg-float" onclick="tg.openLink('https://t.me/your_channel')">
-                <i class="ri-telegram-fill" style="font-size:16px;"></i> Join Channel
+            
+            <div class="mini-bonus-box">
+                <div id="mini-btn" class="mini-btn" onclick="claimMiniBonus()">
+                    <i class="ri-gift-fill"></i> <span>+200</span>
+                </div>
+                <div style="font-size:9px; color:#666; margin-top:4px;">Bonus Ad</div>
             </div>
 
             <div class="solana-coin" id="tap-btn">
@@ -234,7 +258,7 @@
         <div class="energy-box">
             <div class="energy-info">
                 <span>⚡ Energy</span>
-                <span id="energy-txt">200/200</span>
+                <span id="energy-txt">50/50</span>
             </div>
             <div class="energy-track">
                 <div class="energy-fill" id="energy-fill"></div>
@@ -306,6 +330,11 @@
                 <div class="swap-input" id="swap-out" style="color: var(--sol-green); font-size: 16px;">0.00</div>
             </div>
         </div>
+
+        <button class="tg-wallet-btn" onclick="openTgLink('https://t.me/soltapcoin')">
+            <i class="ri-telegram-fill"></i> Join Channel
+        </button>
+
         <button class="btn-action" onclick="showWithdrawModal()">Connect Wallet</button>
     </div>
 
@@ -324,11 +353,20 @@
             <button class="btn-action" onclick="watchRefillAd()">📺 Refill</button>
         </div>
     </div>
+    
+    <div id="idle-modal" class="modal-overlay" style="z-index: 1000;">
+        <div class="modal-box">
+            <i class="ri-zzz-fill" style="font-size: 50px; color: #999;"></i>
+            <h3>Sleep Mode</h3>
+            <p style="color:#888; font-size:14px;">Miner paused due to inactivity.</p>
+            <button class="btn-action" onclick="resumeFromIdle()">📺 Wake Up (Ad)</button>
+        </div>
+    </div>
 
     <div id="withdraw-modal" class="modal-overlay">
         <div class="modal-box">
             <i class="ri-lock-2-fill" style="font-size: 40px; color: #ffd700;"></i>
-            <h3>Min Withdraw $100</h3>
+            <h3>Min Withdraw $1000</h3>
             <button class="btn-action" onclick="closeWithdrawModal()">I Understand</button>
         </div>
     </div>
@@ -347,15 +385,16 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, set, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+        // --- YOUR PRIVATE CONFIGURATION ---
         const firebaseConfig = {
-            apiKey: "AIzaSyAhyInLPhouHDZCPML-AvfOcns2Li9tWmM",
-            authDomain: "facelyze.firebaseapp.com",
-            databaseURL: "https://facelyze-default-rtdb.firebaseio.com",
-            projectId: "facelyze",
-            storageBucket: "facelyze.firebasestorage.app",
-            messagingSenderId: "814580139011",
-            appId: "1:814580139011:web:55ad90f052e7de32d93a36",
-            measurementId: "G-4GZYKL9QWG"
+            apiKey: "AIzaSyAghmBjfnclb4yIwEmx7Uxssj7cpZkea1Q",
+            authDomain: "solanacoin-6d9a8.firebaseapp.com",
+            databaseURL: "https://solanacoin-6d9a8-default-rtdb.firebaseio.com",
+            projectId: "solanacoin-6d9a8",
+            storageBucket: "solanacoin-6d9a8.firebasestorage.app",
+            messagingSenderId: "269025348490",
+            appId: "1:269025348490:web:87c95514a1d86485169673",
+            measurementId: "G-00X84VW123"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -363,20 +402,35 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
+        window.openTgLink = (url) => { tg.openLink(url); };
+
         let user = { 
             id: null, username: "Guest", score: 0, 
-            energy: 200, maxEnergy: 200, autoMiner: 0, 
-            adClaims: [0,0,0,0,0,0], completedTasks: [] 
+            energy: 50, maxEnergy: 50, autoMiner: 0, 
+            adClaims: [0,0,0,0], completedTasks: [], 
+            lastMiniClaim: 0 
         };
-        const AD_SLOTS = [2, 5, 10, 15, 30, 60];
+
+        const DEFAULT_TASKS = {
+            t1: { title: "Join Community", reward: 200, img: "https://cdn-icons-png.flaticon.com/512/2111/2111646.png", url: "https://t.me/soltapcoin" },
+            t2: { title: "Follow X", reward: 200, img: "https://cdn-icons-png.flaticon.com/512/733/733579.png", url: "https://twitter.com" },
+            t3: { title: "Subscribe YouTube", reward: 300, img: "https://cdn-icons-png.flaticon.com/512/1384/1384060.png", url: "https://youtube.com" }
+        };
+
+        const MAGIC_CONFIG = [
+            { mins: 5, reward: 500 },
+            { mins: 15, reward: 1000 },
+            { mins: 30, reward: 2000 },
+            { mins: 60, reward: 5000 }
+        ];
+
         const AD_IMAGES = [
             "https://cdn-icons-png.flaticon.com/512/2534/2534204.png", 
             "https://cdn-icons-png.flaticon.com/512/2849/2849764.png", 
             "https://cdn-icons-png.flaticon.com/512/9499/9499690.png",
-            "https://cdn-icons-png.flaticon.com/512/8146/8146757.png", 
-            "https://cdn-icons-png.flaticon.com/512/2545/2545603.png", 
-            "https://cdn-icons-png.flaticon.com/512/625/625393.png"
+            "https://cdn-icons-png.flaticon.com/512/8146/8146757.png"
         ];
+
         const RATES = { 
             SOL: { price: 148.50, icon: "https://cryptologos.cc/logos/solana-sol-logo.png" },
             TON: { price: 5.50, icon: "https://cryptologos.cc/logos/toncoin-ton-logo.png" },
@@ -384,38 +438,141 @@
             ETH: { price: 3500.00, icon: "https://cryptologos.cc/logos/ethereum-eth-logo.png" }
         };
 
-        async function init() {
-            if (tg.initDataUnsafe?.user) {
-                user.id = tg.initDataUnsafe.user.id.toString();
-                user.username = tg.initDataUnsafe.user.first_name;
-            } else { user.id = "test_user_final_v5"; }
-            document.getElementById('username').innerText = user.username;
+        let idleTimer = 0;
+        let isIdle = false;
+        const IDLE_LIMIT = 45;
 
+        async function init() {
+            // No strict init here, checked in showAd
             try {
+                if (tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
+                    user.id = tg.initDataUnsafe.user.id.toString();
+                    user.username = tg.initDataUnsafe.user.first_name || "Miner";
+                } else {
+                    const localId = localStorage.getItem('local_sim_id');
+                    if(localId) {
+                        user.id = localId;
+                    } else {
+                        user.id = "test_" + Math.floor(Math.random()*100000);
+                        localStorage.setItem('local_sim_id', user.id);
+                    }
+                    user.username = "Guest User";
+                }
+                document.getElementById('username').innerText = user.username;
+
                 const snap = await get(ref(db, 'sol_users/' + user.id));
                 if (snap.exists()) {
                     const d = snap.val();
                     user.score = Number(d.score || 0);
-                    user.energy = Number(d.energy ?? 200);
+                    user.energy = Number(d.energy ?? 50);
                     user.autoMiner = Number(d.autoMiner || 0);
-                    user.adClaims = d.adClaims || user.adClaims;
+                    user.adClaims = d.adClaims || [0,0,0,0];
                     user.completedTasks = d.completedTasks || [];
+                    user.lastMiniClaim = d.lastMiniClaim || 0;
                 } else { saveUser(); }
-            } catch (e) {}
 
-            initDefaultTasks(); 
+            } catch (e) {
+                console.error("User Load Error:", e);
+            }
+
+            await initDefaultTasks(); 
             loadTasks();
             updateUI(); 
             renderAds();
             setInterval(saveUser, 4000);
             setInterval(autoMine, 1000);
             setInterval(checkAds, 1000);
+            setInterval(checkIdle, 1000);
+            setupIdleListeners();
         }
 
         function saveUser() { if(user.id) update(ref(db, 'sol_users/' + user.id), user); }
 
+        function initInAppAds() {
+            if(typeof show_10254149 === 'function') {
+                show_10254149({
+                    type: 'inApp',
+                    inAppSettings: { frequency: 2, capping: 0.1, interval: 30, timeout: 5, everyPage: false }
+                });
+            }
+        }
+
+        // --- STRICT AD LOGIC ---
+        function showAd() {
+            return new Promise((resolve, reject) => {
+                // 1. Check Internet
+                if(!navigator.onLine) {
+                    tg.showAlert("No Internet! Cannot load ad.");
+                    reject();
+                    return;
+                }
+                
+                // 2. Check if SDK Loaded
+                if (typeof show_10254149 !== 'function') {
+                    tg.showAlert("Ad System Loading... Wait 5s and try again.");
+                    reject();
+                    return;
+                }
+
+                // 3. Execute Ad
+                show_10254149().then(() => {
+                    // Success
+                    resolve();
+                }).catch((e) => {
+                    // Fail
+                    console.error(e);
+                    tg.showAlert("Ad failed to load. No reward given.");
+                    reject();
+                });
+            });
+        }
+
+        function setupIdleListeners() {
+            const reset = () => { if(!isIdle) idleTimer = 0; };
+            const zone = document.getElementById('screen-mine');
+            zone.addEventListener('click', reset);
+            zone.addEventListener('touchstart', reset);
+            zone.addEventListener('mousemove', reset);
+        }
+
+        function checkIdle() {
+            if(document.getElementById('screen-mine').classList.contains('active') && !isIdle && document.getElementById('limit-modal').style.display !== 'flex') {
+                idleTimer++;
+                if(idleTimer >= IDLE_LIMIT) {
+                    isIdle = true;
+                    document.getElementById('idle-modal').style.display = 'flex';
+                }
+            }
+        }
+
+        // --- STRICT RESUME ---
+        window.resumeFromIdle = () => {
+            showAd().then(() => {
+                isIdle = false;
+                idleTimer = 0;
+                document.getElementById('idle-modal').style.display = 'none';
+            }).catch(() => {
+                // Stay Idle
+            });
+        }
+
+        // --- STRICT MINI BONUS ---
+        window.claimMiniBonus = () => {
+            const now = Date.now();
+            if (now - user.lastMiniClaim < 40000) return; 
+
+            showAd().then(() => {
+                user.score += 200;
+                user.lastMiniClaim = Date.now();
+                saveUser();
+                updateUI();
+                tg.showAlert("Brilliant! +200 Coins");
+            }).catch(() => {
+                // No Reward
+            });
+        }
+
         window.updateUI = () => {
-             // 1. Level Logic
              let rank = { name: "Bronze Level", color: "var(--bronze)" };
              if(user.score > 5000) rank = { name: "Silver Level", color: "#c0c0c0" };
              if(user.score > 25000) rank = { name: "Gold Level", color: "var(--gold)" };
@@ -424,17 +581,21 @@
              const rnEl = document.getElementById('rank-name');
              rnEl.innerText = rank.name; rnEl.style.color = rank.color;
 
-             // 2. Score & Energy
              document.getElementById('score').innerText = Math.floor(user.score).toLocaleString();
              document.getElementById('energy-txt').innerText = `${user.energy}/${user.maxEnergy}`;
              document.getElementById('energy-fill').style.width = `${(user.energy/user.maxEnergy)*100}%`;
-             document.getElementById('auto-rate').innerText = user.autoMiner;
+             
+             const arEl = document.getElementById('auto-rate');
+             arEl.innerText = user.autoMiner;
+             if(user.autoMiner > 0 && !isIdle) {
+                 arEl.parentElement.classList.add('auto-mining-active');
+             } else {
+                 arEl.parentElement.classList.remove('auto-mining-active');
+             }
 
-             // 3. Main Page SOL equivalent (10000 Coin = 1 SOL)
              const solTotal = user.score / 10000;
              document.getElementById('real-sol').innerText = solTotal.toFixed(4);
 
-             // 4. Wallet Page Rates
              const bBtn = document.getElementById('bot-btn');
              const bStat = document.getElementById('bot-status');
              if(user.autoMiner>=10) { bBtn.innerText="MAX"; bBtn.style.background="#555"; bStat.innerText="Max (10/sec)"; }
@@ -450,102 +611,217 @@
              document.getElementById('swap-out').innerText = (usdValue / RATES[cur].price).toFixed(6);
         };
 
-        // --- GAMEPLAY ---
         document.getElementById('tap-btn').addEventListener('click', (e) => {
+            if (isIdle) return;
             if (user.energy <= 0) { document.getElementById('limit-modal').style.display = 'flex'; return; }
             
             user.score++; user.energy--; 
             
-            // Animation Ripple
             const coin = document.getElementById('tap-btn');
             coin.classList.remove('ripple');
-            void coin.offsetWidth; // trigger reflow
+            void coin.offsetWidth; 
             coin.classList.add('ripple');
 
-            // Float Text
             updateUI();
             const fl = document.createElement('div');
             fl.className = 'float-txt'; fl.innerText = '+1'; 
             fl.style.left = e.clientX+'px'; fl.style.top = e.clientY+'px';
             document.body.appendChild(fl); setTimeout(()=>fl.remove(),800);
-            tg.HapticFeedback.impactOccurred('light');
+            tg.HapticFeedback.impactOccurred('medium'); 
         });
 
-        // --- TASK LOGIC (Visit but no reward) ---
-        window.doT = (k, r, urlFallback) => {
+        window.doT = (k, r, url) => {
             const isDone = user.completedTasks.includes(k);
-            const url = urlFallback || "https://google.com";
-
-            if (isDone) {
-                // User already claimed, just allow them to re-visit link
-                tg.openLink(url);
-                return;
-            }
-
-            // Normal Claim Process
+            if (isDone) { tg.openLink(url); return; }
             tg.openLink(url);
             setTimeout(()=>{ 
                 if(confirm('Mission Complete?')){ 
                     user.score+=r; 
                     user.completedTasks.push(k); 
-                    saveUser(); 
-                    loadTasks(); 
-                    updateUI(); 
+                    saveUser(); loadTasks(); updateUI(); 
                     tg.showAlert("Reward Claimed!");
                 } 
-            },2000);
+            },3000);
         }
 
         async function initDefaultTasks() {
-             const s=await get(ref(db,'tasks'));
-             if(!s.exists()) set(ref(db,'tasks'), {
-                 t1:{title:"Join Community",reward:200,img:"https://cdn-icons-png.flaticon.com/512/2111/2111646.png", url:"https://t.me/telegram"},
-                 t2:{title:"Follow X",reward:200,img:"https://cdn-icons-png.flaticon.com/512/733/733579.png", url:"https://twitter.com"}
-             });
+             try {
+                 const s = await get(ref(db,'tasks'));
+                 if(!s.exists()) {
+                     await set(ref(db,'tasks'), DEFAULT_TASKS);
+                 }
+             } catch(e) { console.log("Task Init Error"); }
         }
+
         async function loadTasks() {
-            const s=await get(ref(db,'tasks')); const l=document.getElementById('task-list'); l.innerHTML='';
-            if(s.exists()) {
-                const t=s.val();
-                Object.keys(t).forEach(k=>{
-                    const done=user.completedTasks.includes(k);
-                    // Updated Button Style Logic
-                    l.innerHTML+=`
-                    <div class="glass-panel task-item">
-                        <img src="${t[k].img}" class="task-img">
-                        <div style="flex:1;">
-                            <div style="font-weight:bold">${t[k].title}</div>
-                            <div style="color:var(--sol-green);font-size:12px">+${t[k].reward}</div>
-                        </div>
-                        <button class="task-btn ${done?'done':''}" onclick="doT('${k}',${t[k].reward}, '${t[k].url || 'https://google.com'}')">
-                            ${done ? 'Visited' : 'Start'}
-                        </button>
-                    </div>`;
+            const l = document.getElementById('task-list'); 
+            l.innerHTML='';
+            let t = DEFAULT_TASKS; 
+            try {
+                const s = await get(ref(db,'tasks')); 
+                if(s.exists()) t = s.val();
+            } catch(e) { }
+
+            Object.keys(t).forEach(k=>{
+                const done=user.completedTasks.includes(k);
+                l.innerHTML+=`
+                <div class="glass-panel task-item">
+                    <img src="${t[k].img}" class="task-img">
+                    <div style="flex:1;">
+                        <div style="font-weight:bold">${t[k].title}</div>
+                        <div style="color:var(--sol-green);font-size:12px">+${t[k].reward}</div>
+                    </div>
+                    <button class="task-btn ${done?'done':''}" onclick="doT('${k}',${t[k].reward}, '${t[k].url}')">
+                        ${done ? 'Visited' : 'Start'}
+                    </button>
+                </div>`;
+            });
+        }
+
+        // --- STRICT BOOST SYSTEM ---
+        window.buyBot = () => {
+            if (user.autoMiner >= 10) {
+                tg.showAlert("Max Level Reached!");
+                return;
+            }
+            if (user.score >= 1000) {
+                showAd().then(() => {
+                    user.score -= 1000;
+                    user.autoMiner++;
+                    saveUser();
+                    updateUI();
+                    tg.showAlert("Success! Auto-Bot Upgraded.");
+                }).catch(() => {
+                    // No Upgrade
                 });
+            } else {
+                tg.showAlert("Need 1000 Coins to upgrade!");
             }
         }
-
-        // --- OTHER FUNCTIONS ---
-        window.buyBot=()=>{ if(user.autoMiner>=10)return; if(user.score>=1000){user.score-=1000;user.autoMiner++;saveUser();updateUI();}else{tg.showAlert("Need 1000 Coin");}}
-        function autoMine(){if(user.autoMiner>0){user.score+=user.autoMiner;updateUI();}}
         
-        function renderAds(){ const g=document.getElementById('ad-grid');g.innerHTML='';AD_SLOTS.forEach((m,i)=>{
-            g.innerHTML+=`<div class="glass-panel ad-card"><img src="${AD_IMAGES[i]}" class="rank-img"><div style="font-size:11px">Wait ${m}m</div><div style="color:var(--sol-green);font-weight:bold">+${m*5}</div><button id="abtn-${i}" class="task-btn" style="width:100%" onclick="claimAd(${i},${m})">Claim</button></div>`;});}
+        function autoMine(){
+            if(isIdle) return; 
+            if(user.autoMiner > 0){
+                user.score += user.autoMiner;
+                updateUI();
+            }
+        }
         
-        function checkAds(){const now=Date.now();AD_SLOTS.forEach((m,i)=>{const b=document.getElementById(`abtn-${i}`);if(b){const d=now-user.adClaims[i];const w=m*60000;if(d<w){b.disabled=true;b.style.opacity=.5;b.innerText=Math.ceil((w-d)/60000)+"m";}else{b.disabled=false;b.style.opacity=1;b.innerText="Claim";}}});}
+        function renderAds(){ 
+            const g=document.getElementById('ad-grid');g.innerHTML='';
+            MAGIC_CONFIG.forEach((cfg,i)=>{
+                g.innerHTML+=`
+                <div class="glass-panel ad-card">
+                    <img src="${AD_IMAGES[i]}" class="rank-img">
+                    <div style="font-size:11px">Wait ${cfg.mins}m</div>
+                    <div style="color:var(--sol-green);font-weight:bold">+${cfg.reward}</div>
+                    <button id="abtn-${i}" class="task-btn" style="width:100%" onclick="claimAd(${i},${cfg.mins},${cfg.reward})">Claim</button>
+                </div>`;
+            });
+        }
         
-        window.claimAd=(i,m)=>{showAd().then(()=>{user.score+=m*5;user.adClaims[i]=Date.now();saveUser();updateUI();});}
-        window.watchRefillAd=()=>{showAd().then(()=>{user.energy=user.maxEnergy;saveUser();updateUI();document.getElementById('limit-modal').style.display='none';});}
+        function checkAds(){
+            const now=Date.now();
+            MAGIC_CONFIG.forEach((cfg,i)=>{
+                const b=document.getElementById(`abtn-${i}`);
+                if(b){
+                    const d=now-(user.adClaims[i] || 0);
+                    const w=cfg.mins*60000;
+                    if(d<w){
+                        b.disabled=true;b.style.opacity=.5;
+                        b.innerText=Math.ceil((w-d)/60000)+"m";
+                    }else{
+                        b.disabled=false;b.style.opacity=1;
+                        b.innerText="Claim";
+                    }
+                }
+            });
+            
+            const mb = document.getElementById('mini-btn');
+            const diff = now - user.lastMiniClaim;
+            if (diff < 40000) {
+                mb.classList.add('locked');
+                mb.querySelector('span').innerText = Math.ceil((40000 - diff) / 1000) + "s";
+            } else {
+                mb.classList.remove('locked');
+                mb.querySelector('span').innerText = "+200";
+            }
+        }
         
-        function showAd(){return new Promise((r,j)=>{if(typeof show_10252050==='function')show_10252050().then(r).catch(j);else{alert('Ad Sim');r();}});}
-
-        window.showWithdrawModal = () => { document.getElementById('withdraw-modal').style.display='flex'; }
-        window.closeWithdrawModal = () => { 
-            document.getElementById('withdraw-modal').style.display='none';
-            if(typeof show_10252050==='function') show_10252050({type:'inApp',inAppSettings:{frequency:2,capping:0.1,interval:30,timeout:5,everyPage:false}});
+        // --- STRICT MAGIC CLAIM ---
+        window.claimAd=(i,mins,rew)=>{
+            showAd().then(()=>{
+                user.score+=rew;
+                if(!user.adClaims) user.adClaims = [0,0,0,0];
+                user.adClaims[i]=Date.now();
+                saveUser();
+                updateUI();
+            }).catch(() => {
+                // No Reward
+            });
         }
 
-        window.openLeaderboard=async()=>{document.getElementById('lb-modal').style.display='flex';const l=document.getElementById('lb-list');l.innerHTML='Loading...';try{const s=await get(ref(db,'sol_users'));let ar=[];s.forEach(c=>{const p=c.val();ar.push({u:p.username,s:Number(p.score||0)});});ar.sort((a,b)=>b.s-a.s);ar=ar.slice(0,20);l.innerHTML='';ar.forEach((u,i)=>{l.innerHTML+=`<div class="lb-row"><div class="lb-rank">#${i+1}</div><div>${u.u.substring(0,15)}</div><div class="lb-val"><img src="https://cryptologos.cc/logos/solana-sol-logo.png" width="12">${Math.floor(u.s).toLocaleString()}</div></div>`;});}catch(e){l.innerText="No Data";}}
+        // --- STRICT REFILL ---
+        window.watchRefillAd=()=>{
+            showAd().then(()=>{
+                user.energy=user.maxEnergy;
+                saveUser();
+                updateUI();
+                document.getElementById('limit-modal').style.display='none';
+            }).catch(() => {
+                // No Refill
+            });
+        }
+
+        window.showWithdrawModal = () => { document.getElementById('withdraw-modal').style.display='flex'; }
+        window.closeWithdrawModal = () => { document.getElementById('withdraw-modal').style.display='none'; }
+
+        window.openLeaderboard = async () => {
+            document.getElementById('lb-modal').style.display='flex';
+            const l = document.getElementById('lb-list');
+            l.innerHTML = 'Loading Global Data...';
+
+            try {
+                const s = await get(ref(db, 'sol_users'));
+                let ar = [];
+                s.forEach(c => {
+                    const p = c.val();
+                    ar.push({ id: c.key, u: p.username || "Anon", s: Number(p.score || 0) });
+                });
+                ar.sort((a, b) => b.s - a.s);
+
+                const myIdx = ar.findIndex(x => x.id === user.id);
+                const myRank = myIdx + 1;
+                const myData = (myIdx !== -1) ? ar[myIdx] : { u: user.username, s: user.score };
+
+                l.innerHTML = '';
+                l.innerHTML += `
+                    <div class="lb-row my-rank-row">
+                        <div class="lb-rank" style="color:var(--sol-green); font-weight:900;">#${myRank > 0 ? myRank : '-'}</div>
+                        <div style="font-weight:bold;">${myData.u.substring(0,15)} (You)</div>
+                        <div class="lb-val"><img src="https://cryptologos.cc/logos/solana-sol-logo.png" width="12">${Math.floor(myData.s).toLocaleString()}</div>
+                    </div>
+                    <div style="text-align:center; font-size:10px; color:#666; margin-bottom:10px;">— TOP 20 —</div>
+                `;
+                const top20 = ar.slice(0, 20);
+                top20.forEach((u, i) => {
+                    let rankColor = "white";
+                    if(i===0) rankColor="gold";
+                    if(i===1) rankColor="silver";
+                    if(i===2) rankColor="#cd7f32";
+
+                    l.innerHTML += `
+                    <div class="lb-row">
+                        <div class="lb-rank" style="color:${rankColor}; width:30px;">#${i+1}</div>
+                        <div style="flex:1; text-align:left; padding-left:10px;">${u.u.substring(0,15)}</div>
+                        <div class="lb-val"><img src="https://cryptologos.cc/logos/solana-sol-logo.png" width="12">${Math.floor(u.s).toLocaleString()}</div>
+                    </div>`;
+                });
+
+            } catch (e) {
+                l.innerText = "Error loading leaderboard.";
+            }
+        }
 
         window.nav=(id,el)=>{document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.getElementById('screen-'+id).classList.add('active');el.classList.add('active');};
         
